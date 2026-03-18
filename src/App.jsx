@@ -1,121 +1,120 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import V1 from './versions/v1/Version'
+import V2 from './versions/v2/Version'
+import V3 from './versions/v3/Version'
 
-function App() {
-  const [count, setCount] = useState(0)
+const PAGES = ['overview', 'declarations', 'dsn']
+const PAGE_LABELS = { overview: 'Overview', declarations: 'Declarations', dsn: 'DSN' }
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+const styles = {
+  app: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+    overflow: 'hidden',
+    background: 'var(--grey-50)',
+  },
+  canvasBar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '2px',
+    padding: '8px 16px',
+    background: 'var(--white)',
+    borderBottom: '1px solid var(--grey-200)',
+    flexShrink: 0,
+  },
+  canvasBarLabel: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--grey-600)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.06em',
+    marginRight: '8px',
+    fontWeight: 600,
+  },
+  tabBtn: (active) => ({
+    padding: '4px 12px',
+    fontSize: 'var(--text-sm)',
+    fontWeight: active ? 600 : 400,
+    color: active ? 'var(--accent)' : 'var(--grey-800)',
+    background: active ? '#EBF0FF' : 'transparent',
+    border: '1px solid',
+    borderColor: active ? 'var(--accent)' : 'transparent',
+    cursor: 'pointer',
+  }),
+  canvas: {
+    display: 'flex',
+    flex: 1,
+    overflow: 'auto',
+    gap: 0,
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column',
+    minWidth: '480px',
+    flex: '1 1 0',
+    borderRight: '2px solid var(--grey-200)',
+    overflow: 'auto',
+    background: 'var(--white)',
+  },
+  columnLabel: {
+    padding: '6px 12px',
+    fontSize: 'var(--text-xs)',
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em',
+    color: 'var(--grey-600)',
+    background: 'var(--grey-50)',
+    borderBottom: '1px solid var(--grey-100)',
+    flexShrink: 0,
+  },
+  versionWrap: {
+    flex: 1,
+    overflow: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }
 
-export default App
+export default function App() {
+  const [activePage, setActivePage] = useState('overview')
+
+  return (
+    <div style={styles.app}>
+      <div style={styles.canvasBar}>
+        <span style={styles.canvasBarLabel}>Sync page</span>
+        {PAGES.map((p) => (
+          <button
+            key={p}
+            style={styles.tabBtn(activePage === p)}
+            onClick={() => setActivePage(p)}
+          >
+            {PAGE_LABELS[p]}
+          </button>
+        ))}
+      </div>
+
+      <div style={styles.canvas}>
+        <div style={styles.column}>
+          <div style={styles.columnLabel}>V1 — Two-column dense table</div>
+          <div style={styles.versionWrap}>
+            <V1 activePage={activePage} />
+          </div>
+        </div>
+
+        <div style={styles.column}>
+          <div style={styles.columnLabel}>V2 — Status strip + sections</div>
+          <div style={styles.versionWrap}>
+            <V2 activePage={activePage} />
+          </div>
+        </div>
+
+        <div style={{ ...styles.column, borderRight: 'none' }}>
+          <div style={styles.columnLabel}>V3 — Spreadsheet rows</div>
+          <div style={styles.versionWrap}>
+            <V3 activePage={activePage} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
