@@ -2,6 +2,7 @@ import { useState } from 'react'
 import V1 from './versions/v1/Version'
 import V2 from './versions/v2/Version'
 import V3 from './versions/v3/Version'
+import V4 from './versions/v4/Version'
 
 const PAGES = ['overview', 'declarations', 'dsn']
 const PAGE_LABELS = { overview: 'Overview', declarations: 'Declarations', dsn: 'DSN' }
@@ -41,20 +42,25 @@ const styles = {
     borderColor: active ? 'var(--accent)' : 'transparent',
     cursor: 'pointer',
   }),
-  canvas: {
-    display: 'flex',
+  canvasScroll: {
     flex: 1,
     overflow: 'auto',
-    gap: 0,
+  },
+  canvasInner: {
+    display: 'inline-flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: '56px',
+    padding: '56px',
+    minHeight: '100%',
   },
   column: {
+    width: '1440px',
+    flexShrink: 0,
     display: 'flex',
     flexDirection: 'column',
-    minWidth: '480px',
-    flex: '1 1 0',
-    borderRight: '2px solid var(--grey-200)',
-    overflow: 'auto',
     background: 'var(--white)',
+    border: '1px solid var(--grey-200)',
   },
   columnLabel: {
     padding: '6px 12px',
@@ -64,14 +70,8 @@ const styles = {
     letterSpacing: '0.08em',
     color: 'var(--grey-600)',
     background: 'var(--grey-50)',
-    borderBottom: '1px solid var(--grey-100)',
+    borderBottom: '1px solid var(--grey-200)',
     flexShrink: 0,
-  },
-  versionWrap: {
-    flex: 1,
-    overflow: 'auto',
-    display: 'flex',
-    flexDirection: 'column',
   },
 }
 
@@ -93,25 +93,26 @@ export default function App() {
         ))}
       </div>
 
-      <div style={styles.canvas}>
-        <div style={styles.column}>
-          <div style={styles.columnLabel}>V1 — Two-column dense table</div>
-          <div style={styles.versionWrap}>
+      <div style={styles.canvasScroll}>
+        <div style={styles.canvasInner}>
+          <div style={styles.column}>
+            <div style={styles.columnLabel}>V1 — Expandable strip · Critical signals inline, all data on demand</div>
             <V1 activePage={activePage} />
           </div>
-        </div>
 
-        <div style={styles.column}>
-          <div style={styles.columnLabel}>V2 — Status strip + sections</div>
-          <div style={styles.versionWrap}>
+          <div style={styles.column}>
+            <div style={styles.columnLabel}>V2 — Persistent sidebar · Company data always visible</div>
             <V2 activePage={activePage} />
           </div>
-        </div>
 
-        <div style={{ ...styles.column, borderRight: 'none' }}>
-          <div style={styles.columnLabel}>V3 — Spreadsheet rows</div>
-          <div style={styles.versionWrap}>
+          <div style={styles.column}>
+            <div style={styles.columnLabel}>V3 — Top panel · Full-width company data above content</div>
             <V3 activePage={activePage} />
+          </div>
+
+          <div style={styles.column}>
+            <div style={styles.columnLabel}>V4 — Right rail · Content first, data always on the right</div>
+            <V4 activePage={activePage} />
           </div>
         </div>
       </div>

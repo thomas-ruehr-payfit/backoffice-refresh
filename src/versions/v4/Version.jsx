@@ -1,7 +1,7 @@
-// V2 — Persistent sidebar + content area
-// The company data panel is always visible on the left, regardless of active tab.
-// Tabs and page content live in the right content area.
-// Reflects the navigation structure: Company list → Company → [tab content]
+// V4 — Right rail
+// The inverse of V2. Content area + tabs occupy the full left zone (reading direction).
+// Company data lives in a compact panel pinned to the right edge — always visible.
+// The rail uses a denser, smaller-text style to stay out of the way of the content.
 
 import { useState } from 'react'
 import Overview from './pages/Overview'
@@ -29,12 +29,12 @@ const sw = {
   trigger: (size) => ({
     display: 'inline-flex', alignItems: 'center', gap: '4px',
     background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-    fontSize: size || '15px', fontWeight: 700, color: 'var(--black)', textAlign: 'left',
+    fontSize: size || '14px', fontWeight: 700, color: 'var(--black)', textAlign: 'left',
     fontFamily: 'inherit',
   }),
-  chevron: { fontSize: '11px', color: 'var(--grey-400)', fontWeight: 400 },
+  chevron: { fontSize: '10px', color: 'var(--grey-400)', fontWeight: 400 },
   dropdown: {
-    position: 'absolute', top: '100%', left: 0, zIndex: 200,
+    position: 'absolute', top: '100%', right: 0, zIndex: 200,
     background: 'var(--white)', border: '1px solid var(--grey-200)', minWidth: '260px', marginTop: '4px',
   },
   item: (active) => ({
@@ -71,155 +71,138 @@ function CompanySwitcher({ size, current, onChange }) {
   )
 }
 
-// ─── Sidebar styles ────────────────────────────────────────────────────────────
+// ── Rail styles ────────────────────────────────────────────────────────────────
 
-const sidebar = {
+const rail = {
   root: {
-    width: '280px',
+    width: '240px',
     flexShrink: 0,
-    borderRight: '1px solid var(--grey-200)',
+    borderLeft: '1px solid var(--grey-200)',
     display: 'flex',
     flexDirection: 'column',
-    background: 'var(--white)',
+    background: 'var(--grey-50)',
+    fontFamily: 'var(--font-mono)',
   },
   companyHeader: {
-    padding: '14px 16px 12px',
+    padding: '10px 12px',
     borderBottom: '1px solid var(--grey-200)',
+    background: 'var(--white)',
   },
   companyName: {
-    fontSize: '17px',
+    fontSize: 'var(--text-md)',
     fontWeight: 700,
     color: 'var(--black)',
-    letterSpacing: '-0.01em',
+    fontFamily: 'var(--font)',
   },
   stateRow: {
-    display: 'flex',
-    alignItems: 'stretch',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
     gap: '1px',
     background: 'var(--grey-200)',
     borderBottom: '2px solid var(--grey-200)',
   },
   stateCell: {
     background: 'var(--white)',
-    padding: '7px 12px',
+    padding: '5px 10px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '2px',
-    flex: 1,
+    gap: '1px',
+  },
+  stateCellFull: {
+    background: 'var(--white)',
+    padding: '5px 10px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1px',
+    gridColumn: '1 / -1',
+    borderTop: '1px solid var(--grey-100)',
   },
   stateCellLabel: {
-    fontSize: '10px',
+    fontSize: '9px',
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.07em',
     color: 'var(--grey-400)',
+    fontFamily: 'var(--font)',
   },
   stateCellValue: {
-    fontSize: 'var(--text-sm)',
+    fontSize: 'var(--text-xs)',
     fontWeight: 700,
     color: 'var(--black)',
   },
   stateCellValueCritical: {
-    fontSize: 'var(--text-sm)',
+    fontSize: 'var(--text-xs)',
     fontWeight: 700,
     color: 'var(--accent)',
-  },
-  accountBlock: {
-    borderBottom: '1px solid var(--grey-200)',
-    background: 'var(--grey-50)',
-  },
-  accountRow: {
-    display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    padding: '3px 16px',
-    borderBottom: '1px solid var(--grey-100)',
-    gap: '8px',
-  },
-  accountLabel: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-500)',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-  },
-  accountValue: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-700)',
-    fontWeight: 500,
-    textAlign: 'right',
-  },
-  accountValueFaded: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-400)',
-    textAlign: 'right',
   },
   section: {
     borderBottom: '1px solid var(--grey-200)',
   },
-  sectionToggle: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '5px 16px',
-    fontSize: 'var(--text-xs)',
+  sectionHead: {
+    padding: '3px 10px',
+    fontSize: '9px',
     fontWeight: 700,
     textTransform: 'uppercase',
-    letterSpacing: '0.07em',
-    color: 'var(--grey-600)',
-    background: 'var(--grey-50)',
-    borderBottom: '1px solid var(--grey-100)',
-    cursor: 'pointer',
-    userSelect: 'none',
+    letterSpacing: '0.08em',
+    color: 'var(--grey-500)',
+    background: 'var(--grey-100)',
+    borderBottom: '1px solid var(--grey-200)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
   },
-  toggleIcon: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-400)',
-    fontFamily: 'var(--font-mono)',
-    fontWeight: 400,
-  },
-  orgStatusBadge: (enabled) => ({
-    fontSize: '10px',
+  orgBadge: (enabled) => ({
+    fontSize: '9px',
     fontWeight: 700,
-    padding: '1px 5px',
+    padding: '0 4px',
     background: enabled ? '#EBF0FF' : 'var(--grey-100)',
     color: enabled ? 'var(--accent)' : 'var(--grey-500)',
     border: `1px solid ${enabled ? 'var(--accent)' : 'var(--grey-200)'}`,
-    marginLeft: '6px',
   }),
   row: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'baseline',
-    padding: '3px 16px',
+    padding: '2px 10px',
     borderBottom: '1px solid var(--grey-100)',
-    gap: '8px',
+    gap: '6px',
+    alignItems: 'baseline',
   },
   rowLabel: {
-    fontSize: 'var(--text-sm)',
+    fontSize: 'var(--text-xs)',
     color: 'var(--grey-600)',
     whiteSpace: 'nowrap',
     flexShrink: 0,
   },
   rowValue: {
-    fontSize: 'var(--text-sm)',
+    fontSize: 'var(--text-xs)',
     color: 'var(--black)',
     fontWeight: 500,
     textAlign: 'right',
   },
   rowValueFaded: {
-    fontSize: 'var(--text-sm)',
+    fontSize: 'var(--text-xs)',
     color: 'var(--grey-400)',
     textAlign: 'right',
   },
   encrypted: {
-    fontSize: 'var(--text-xs)',
+    fontSize: '10px',
     color: 'var(--grey-400)',
-    fontFamily: 'var(--font-mono)',
     textAlign: 'right',
+  },
+  accountBlock: {
+    borderBottom: '1px solid var(--grey-200)',
+  },
+  accountRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '2px 10px',
+    borderBottom: '1px solid var(--grey-100)',
+    gap: '6px',
+    alignItems: 'baseline',
   },
 }
 
-// ─── Shell styles ──────────────────────────────────────────────────────────────
+// ── Shell styles ───────────────────────────────────────────────────────────────
 
 const shell = {
   version: {
@@ -233,15 +216,14 @@ const shell = {
     padding: '8px 16px',
     gap: '12px',
     borderBottom: '1px solid var(--grey-200)',
-    flexShrink: 0,
   },
   breadcrumb: {
     fontSize: 'var(--text-sm)',
     color: 'var(--grey-400)',
-    whiteSpace: 'nowrap',
     display: 'flex',
     alignItems: 'center',
     gap: '4px',
+    whiteSpace: 'nowrap',
   },
   breadcrumbCurrent: {
     color: 'var(--grey-700)',
@@ -291,130 +273,125 @@ const shell = {
   }),
 }
 
-// ─── Sidebar sub-components ────────────────────────────────────────────────────
+// ── Rail sub-components ────────────────────────────────────────────────────────
 
-function SidebarRow({ label, value, faded, encrypted }) {
+function RailRow({ label, value, faded, encrypted }) {
   return (
-    <div style={sidebar.row}>
-      <span style={sidebar.rowLabel}>{label}</span>
+    <div style={rail.row}>
+      <span style={rail.rowLabel}>{label}</span>
       {encrypted
-        ? <span style={sidebar.encrypted}>[Encrypted]</span>
-        : <span style={faded ? sidebar.rowValueFaded : sidebar.rowValue}>{value}</span>
+        ? <span style={rail.encrypted}>[Enc.]</span>
+        : <span style={faded ? rail.rowValueFaded : rail.rowValue}>{value}</span>
       }
     </div>
   )
 }
 
-function SidebarSection({ title, badge, defaultOpen = true, children }) {
-  const [open, setOpen] = useState(defaultOpen)
+function RailSection({ title, badge, children }) {
   return (
-    <div style={sidebar.section}>
-      <div style={sidebar.sectionToggle} onClick={() => setOpen(o => !o)}>
-        <span>
-          {title}
-          {badge && <span style={sidebar.orgStatusBadge(badge === 'Enabled')}>{badge}</span>}
-        </span>
-        <span style={sidebar.toggleIcon}>{open ? '−' : '+'}</span>
+    <div style={rail.section}>
+      <div style={rail.sectionHead}>
+        {title}
+        {badge && <span style={rail.orgBadge(badge === 'Enabled')}>{badge}</span>}
       </div>
-      {open && children}
+      {children}
     </div>
   )
 }
 
-function CompanySidebar({ current, onChange }) {
+function CompanyRail({ current, onChange }) {
   return (
-    <div style={sidebar.root}>
-      {/* Company name */}
-      <div style={sidebar.companyHeader}>
-        <CompanySwitcher size="17px" current={current} onChange={onChange} />
+    <div style={rail.root}>
+      <div style={rail.companyHeader}>
+        <CompanySwitcher size="14px" current={current} onChange={onChange} />
       </div>
 
-      {/* Operational state */}
-      <div style={sidebar.stateRow}>
-        <div style={sidebar.stateCell}>
-          <span style={sidebar.stateCellLabel}>Cycle</span>
-          <span style={sidebar.stateCellValueCritical}>Mar 26 (125)</span>
+      {/* Operational state — 2-col grid */}
+      <div style={rail.stateRow}>
+        <div style={rail.stateCell}>
+          <span style={rail.stateCellLabel}>Status</span>
+          <span style={rail.stateCellValueCritical}>Active</span>
         </div>
-        <div style={sidebar.stateCell}>
-          <span style={sidebar.stateCellLabel}>Status</span>
-          <span style={sidebar.stateCellValueCritical}>Active</span>
+        <div style={rail.stateCell}>
+          <span style={rail.stateCellLabel}>Suspension</span>
+          <span style={rail.stateCellValue}>Operational</span>
         </div>
-        <div style={sidebar.stateCell}>
-          <span style={sidebar.stateCellLabel}>Suspension</span>
-          <span style={sidebar.stateCellValue}>Operational</span>
+        <div style={rail.stateCellFull}>
+          <span style={rail.stateCellLabel}>Payroll cycle</span>
+          <span style={rail.stateCellValueCritical}>March 26 (125)</span>
         </div>
       </div>
 
-      {/* Account classification */}
-      <div style={sidebar.accountBlock}>
-        <div style={sidebar.accountRow}>
-          <span style={sidebar.accountLabel}>Usage</span>
-          <span style={sidebar.accountValue}>Client</span>
+      {/* Account */}
+      <div style={rail.accountBlock}>
+        <div style={rail.accountRow}>
+          <span style={{ ...rail.rowLabel, fontFamily: 'var(--font)' }}>Usage</span>
+          <span style={rail.rowValue}>Client</span>
         </div>
-        <div style={sidebar.accountRow}>
-          <span style={sidebar.accountLabel}>Origin</span>
-          <span style={sidebar.accountValueFaded}>Migration</span>
+        <div style={rail.accountRow}>
+          <span style={{ ...rail.rowLabel, fontFamily: 'var(--font)' }}>Origin</span>
+          <span style={rail.rowValueFaded}>Migration</span>
         </div>
       </div>
 
       {/* Identity */}
-      <SidebarSection title="Identity">
-        <SidebarRow label="Country" value="France" />
-        <SidebarRow label="Creation date" value="26/04/23" />
-        <SidebarRow label="First month" value="30/04/23" />
-        <SidebarRow label="Conv. collective" value="1486" />
-        <SidebarRow label="SIRET" value="45785745673245" />
-        <SidebarRow label="Code NAF" value="6312Z" faded />
-        <SidebarRow label="Immatriculation" value="23/03/22" />
-        <SidebarRow label="Address" value="10 rue de Paradis, 75010" />
-      </SidebarSection>
+      <RailSection title="Identity">
+        <RailRow label="Country" value="France" />
+        <RailRow label="Created" value="26/04/23" />
+        <RailRow label="First month" value="30/04/23" />
+        <RailRow label="SIRET" value="45785745673245" />
+        <RailRow label="NAF" value="6312Z" faded />
+        <RailRow label="IDCC" value="1486" />
+        <RailRow label="Immat." value="23/03/22" />
+        <RailRow label="Address" value="10 rue Paradis" />
+      </RailSection>
 
       {/* Rates */}
-      <SidebarSection title="Rates">
-        <SidebarRow label="Taux AT" value="0.700%" />
-        <SidebarRow label="Taux VT" value="3%" />
-      </SidebarSection>
+      <RailSection title="Rates">
+        <RailRow label="Taux AT" value="0.700%" />
+        <RailRow label="Taux VT" value="3%" />
+      </RailSection>
 
       {/* Urssaf */}
-      <SidebarSection title="Urssaf" badge="Enabled">
-        <SidebarRow label="Method" value="SEPA direct debit" />
-        <SidebarRow label="Limit date" value="15th of month" />
-        <SidebarRow label="Periodicity" value="Monthly" />
-      </SidebarSection>
+      <RailSection title="Urssaf" badge="Enabled">
+        <RailRow label="Method" value="SEPA" />
+        <RailRow label="Limit" value="15th" />
+        <RailRow label="Period" value="Monthly" />
+      </RailSection>
 
       {/* Agirc-Arrco */}
-      <SidebarSection title="Agirc-Arrco" defaultOpen={false}>
-        <SidebarRow label="Method" value="SEPA direct debit" />
-        <SidebarRow label="Periodicity" value="Monthly" />
-      </SidebarSection>
+      <RailSection title="Agirc-Arrco">
+        <RailRow label="Method" value="SEPA" />
+        <RailRow label="Period" value="Monthly" />
+      </RailSection>
 
       {/* Prévoyance */}
-      <SidebarSection title="Prévoyance" defaultOpen={false}>
-        <SidebarRow label="Provider" value="Alan" />
-        <SidebarRow label="Method" value="SEPA direct debit" />
-      </SidebarSection>
+      <RailSection title="Prévoyance">
+        <RailRow label="Provider" value="Alan" />
+        <RailRow label="Method" value="SEPA" />
+      </RailSection>
 
       {/* Mutuelle */}
-      <SidebarSection title="Mutuelle" defaultOpen={false}>
-        <SidebarRow label="Provider" value="Alan" />
-        <SidebarRow label="Method" value="SEPA direct debit" />
-      </SidebarSection>
+      <RailSection title="Mutuelle">
+        <RailRow label="Provider" value="Alan" />
+        <RailRow label="Method" value="SEPA" />
+      </RailSection>
 
       {/* Retraite */}
-      <SidebarSection title="Retraite" defaultOpen={false}>
-        <SidebarRow label="Provider" value="Klésia" />
-      </SidebarSection>
+      <RailSection title="Retraite">
+        <RailRow label="Provider" value="Klésia" />
+      </RailSection>
 
       {/* Banking */}
-      <SidebarSection title="Banking" defaultOpen={false}>
-        <SidebarRow label="BIC" encrypted />
-        <SidebarRow label="IBAN" encrypted />
-      </SidebarSection>
+      <RailSection title="Banking">
+        <RailRow label="BIC" encrypted />
+        <RailRow label="IBAN" encrypted />
+      </RailSection>
     </div>
   )
 }
 
-// ─── Version shell ─────────────────────────────────────────────────────────────
+// ── Version shell ──────────────────────────────────────────────────────────────
 
 export default function Version({ activePage }) {
   const [localPage, setLocalPage] = useState('overview')
@@ -423,7 +400,6 @@ export default function Version({ activePage }) {
 
   return (
     <div style={shell.version}>
-      {/* Top header — search bar */}
       <div style={shell.header}>
         <div style={shell.breadcrumb}>
           <span>Companies</span>
@@ -435,10 +411,8 @@ export default function Version({ activePage }) {
         </div>
       </div>
 
-      {/* Body: sidebar + content area */}
       <div style={shell.body}>
-        <CompanySidebar current={currentCompany} onChange={setCurrentCompany} />
-
+        {/* Content area — left, full width */}
         <div style={shell.contentArea}>
           <div style={shell.tabBar}>
             {TABS.map((t) => (
@@ -451,11 +425,13 @@ export default function Version({ activePage }) {
               </button>
             ))}
           </div>
-
           {currentPage === 'overview' && <Overview />}
           {currentPage === 'declarations' && <Declarations />}
           {currentPage === 'dsn' && <DSN />}
         </div>
+
+        {/* Right rail — always visible */}
+        <CompanyRail current={currentCompany} onChange={setCurrentCompany} />
       </div>
     </div>
   )
