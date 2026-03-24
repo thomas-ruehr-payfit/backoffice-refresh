@@ -3,7 +3,7 @@
 // The strip shows only critical signals. A toggle expands it into a full-width panel
 // revealing all data in a multi-column layout, then collapses back.
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Overview from './pages/Overview'
 import Declarations from './pages/Declarations'
 import DSN from './pages/DSN'
@@ -288,7 +288,8 @@ export default function Version({ activePage }) {
   const [localPage, setLocalPage] = useState('overview')
   const [expanded, setExpanded] = useState(false)
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
-  const currentPage = activePage !== undefined ? activePage : localPage
+  useEffect(() => { if (activePage !== undefined) setLocalPage(activePage) }, [activePage])
+  const currentPage = localPage
 
   return (
     <div style={s.version}>

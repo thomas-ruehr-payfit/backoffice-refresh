@@ -4,7 +4,7 @@
 // The top panel uses a multi-column layout to use the full 1440px width.
 // No sidebar — the data spans the full width horizontally.
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Overview from './pages/Overview'
 import Declarations from './pages/Declarations'
 import DSN from './pages/DSN'
@@ -278,7 +278,8 @@ function Row({ label, value, faded, encrypted }) {
 export default function Version({ activePage }) {
   const [localPage, setLocalPage] = useState('overview')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
-  const currentPage = activePage !== undefined ? activePage : localPage
+  useEffect(() => { if (activePage !== undefined) setLocalPage(activePage) }, [activePage])
+  const currentPage = localPage
 
   return (
     <div style={s.version}>

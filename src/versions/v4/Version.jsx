@@ -3,7 +3,7 @@
 // Company data lives in a compact panel pinned to the right edge — always visible.
 // The rail uses a denser, smaller-text style to stay out of the way of the content.
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Overview from './pages/Overview'
 import Declarations from './pages/Declarations'
 import DSN from './pages/DSN'
@@ -396,7 +396,8 @@ function CompanyRail({ current, onChange }) {
 export default function Version({ activePage }) {
   const [localPage, setLocalPage] = useState('overview')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
-  const currentPage = activePage !== undefined ? activePage : localPage
+  useEffect(() => { if (activePage !== undefined) setLocalPage(activePage) }, [activePage])
+  const currentPage = localPage
 
   return (
     <div style={shell.version}>

@@ -3,7 +3,7 @@
 // Tabs and page content live in the right content area.
 // Reflects the navigation structure: Company list → Company → [tab content]
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Overview from './pages/Overview'
 import Declarations from './pages/Declarations'
 import DSN from './pages/DSN'
@@ -419,7 +419,8 @@ function CompanySidebar({ current, onChange }) {
 export default function Version({ activePage }) {
   const [localPage, setLocalPage] = useState('overview')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
-  const currentPage = activePage !== undefined ? activePage : localPage
+  useEffect(() => { if (activePage !== undefined) setLocalPage(activePage) }, [activePage])
+  const currentPage = localPage
 
   return (
     <div style={shell.version}>
