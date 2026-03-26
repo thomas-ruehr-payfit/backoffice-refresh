@@ -6,6 +6,7 @@ import V8 from '../variations/v8/Version'
 import V9 from '../variations/v9/Version'
 import V10 from '../variations/v10/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
+import DesignDoc from './pages/DesignDoc'
 
 const s = {
   app: {
@@ -22,24 +23,27 @@ const s = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '0 20px',
-    height: '44px',
+    height: '56px',
     background: 'var(--black)',
     flexShrink: 0,
+    position: 'relative',
   },
   appName: {
-    fontSize: 'var(--text-xs)',
-    fontWeight: 700,
-    color: 'var(--grey-400)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.1em',
+    fontFamily: "'Bebas Neue', sans-serif",
+    fontSize: '22px',
+    color: 'var(--white)',
+    letterSpacing: '0.04em',
   },
   appNav: {
     display: 'flex',
     gap: '2px',
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
   },
   appNavBtn: (active) => ({
-    padding: '5px 14px',
-    fontSize: 'var(--text-xs)',
+    padding: '8px 24px',
+    fontSize: 'var(--text-md)',
     fontWeight: active ? 600 : 400,
     color: active ? 'var(--white)' : 'var(--grey-400)',
     background: active ? 'rgba(255,255,255,0.12)' : 'transparent',
@@ -47,6 +51,7 @@ const s = {
     cursor: 'pointer',
     letterSpacing: '0.01em',
     fontFamily: 'inherit',
+    borderRadius: '4px',
   }),
 
 
@@ -85,17 +90,20 @@ const s = {
 }
 
 export default function App() {
-  const [view, setView] = useState('canvas')
+  const [view, setView] = useState('design-doc')
 
   return (
     <div style={s.app}>
 
       {/* App header */}
       <div style={s.appHeader}>
-        <span style={s.appName}>BO Exploration</span>
+        <span style={s.appName}>BackOffice Refresh</span>
         <nav style={s.appNav}>
-          <button style={s.appNavBtn(view === 'canvas')} onClick={() => setView('canvas')}>
-            Canvas
+          <button style={s.appNavBtn(view === 'design-doc')} onClick={() => setView('design-doc')}>
+            Design Decisions
+          </button>
+          <button style={s.appNavBtn(view === 'variations')} onClick={() => setView('variations')}>
+            Explorations
           </button>
           <button style={s.appNavBtn(view === 'ia')} onClick={() => setView('ia')}>
             Information Architecture
@@ -103,8 +111,8 @@ export default function App() {
         </nav>
       </div>
 
-      {/* Canvas */}
-      {view === 'canvas' && (
+      {/* Variations */}
+      {view === 'variations' && (
         <div style={s.canvasScroll}>
           <div style={s.canvasInner}>
             <div style={s.column}>
@@ -138,6 +146,11 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Design Decisions */}
+      {view === 'design-doc' && (
+        <DesignDoc />
       )}
 
       {/* Information Architecture */}
