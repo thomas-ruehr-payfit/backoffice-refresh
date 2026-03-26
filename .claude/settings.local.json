@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(cp old-project-backup/package.json .)",
+      "Bash(cp old-project-backup/vite.config.js .)",
+      "Bash(cp old-project-backup/vercel.json .)",
+      "Bash(cp old-project-backup/index.html .)",
+      "Bash(cp old-project-backup/eslint.config.js .)",
+      "Bash(cp -r old-project-backup/src/versions/v1/. variations/v1/)",
+      "Bash(cp -r old-project-backup/src/versions/v2/. variations/v2/)",
+      "Bash(cp -r old-project-backup/src/versions/v3/. variations/v3/)",
+      "Bash(cp -r old-project-backup/src/versions/v4/. variations/v4/)",
+      "Bash(cp -r old-project-backup/src/versions/v5/. variations/v5/)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(cp:*)"
+    ]
+  }
+}

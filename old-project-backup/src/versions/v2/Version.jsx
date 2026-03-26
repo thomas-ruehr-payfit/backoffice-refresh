@@ -1,18 +1,9 @@
-// V2 — Persistent sidebar + content area
-// The company data panel is always visible on the left, regardless of active tab.
-// Tabs and page content live in the right content area.
-// Reflects the navigation structure: Company list → Company → [tab content]
+// V2 — Domain-organised
+// Navigation by operational domain. Company data always available in the persistent sidebar.
+// Unified search as primary entry point. All sections deep-linkable.
+// Optimises for: Find what I need quickly.
 
 import { useState, useEffect } from 'react'
-import Overview from './pages/Overview'
-import Declarations from './pages/Declarations'
-import DSN from './pages/DSN'
-
-const TABS = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'declarations', label: 'Declarations' },
-  { id: 'dsn', label: 'DSN' },
-]
 
 // ── Company switcher ───────────────────────────────────────────────────────────
 
@@ -71,7 +62,99 @@ function CompanySwitcher({ size, current, onChange }) {
   )
 }
 
-// ─── Sidebar styles ────────────────────────────────────────────────────────────
+// ── Tabs ───────────────────────────────────────────────────────────────────────
+
+const TABS = [
+  { id: 'payroll', label: 'Payroll' },
+  { id: 'people', label: 'People' },
+  { id: 'documents', label: 'Documents' },
+  { id: 'activity', label: 'Activity' },
+]
+
+// ── Section placeholder component ─────────────────────────────────────────────
+
+function Section({ title, note, height = 160 }) {
+  return (
+    <div style={{
+      background: 'var(--grey-50)',
+      border: '1px dashed var(--grey-200)',
+      minHeight: `${height}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '10px 14px',
+      gap: '4px',
+    }}>
+      <span style={{
+        fontSize: 'var(--text-xs)',
+        fontWeight: 700,
+        color: 'var(--grey-700)',
+        textTransform: 'uppercase',
+        letterSpacing: '0.06em',
+      }}>
+        {title}
+      </span>
+      {note && (
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', lineHeight: 1.5 }}>
+          {note}
+        </span>
+      )}
+    </div>
+  )
+}
+
+const pageWrap = { padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }
+
+function PayrollPage() {
+  return (
+    <div style={pageWrap}>
+      <Section title="Declarations list"
+        note="Status per period — generated / sent / rejected — with period label and absolute ID"
+        height={240} />
+      <Section title="DSN pipeline"
+        note="By type: Mensuelle, Prévoyance, Arrco — generation and send status per period"
+        height={180} />
+      <Section title="Scheduled declarations"
+        note="Upcoming triggers — future periods — submission window"
+        height={100} />
+    </div>
+  )
+}
+
+
+function PeoplePage() {
+  return (
+    <div style={pageWrap}>
+      <Section title="Employee list"
+        note="Headcount chart + table — employee status — onboarding and contract management"
+        height={320} />
+      <Section title="Admin access"
+        note="Current admins — temporary connect access — add / remove"
+        height={140} />
+    </div>
+  )
+}
+
+function DocumentsPage() {
+  return (
+    <div style={pageWrap}>
+      <Section title="Files archive"
+        note="Filterable by type, period, and date — downloadable documents"
+        height={480} />
+    </div>
+  )
+}
+
+function ActivityPage() {
+  return (
+    <div style={pageWrap}>
+      <Section title="Timeline"
+        note="Chronological event log — filterable by type: declarations, config changes, access events"
+        height={600} />
+    </div>
+  )
+}
+
+// ── Sidebar styles ─────────────────────────────────────────────────────────────
 
 const sidebar = {
   root: {
@@ -85,12 +168,6 @@ const sidebar = {
   companyHeader: {
     padding: '14px 16px 12px',
     borderBottom: '1px solid var(--grey-200)',
-  },
-  companyName: {
-    fontSize: '17px',
-    fontWeight: 700,
-    color: 'var(--black)',
-    letterSpacing: '-0.01em',
   },
   stateRow: {
     display: 'flex',
@@ -219,7 +296,7 @@ const sidebar = {
   },
 }
 
-// ─── Shell styles ──────────────────────────────────────────────────────────────
+// ── Shell styles ───────────────────────────────────────────────────────────────
 
 const shell = {
   version: {
@@ -254,13 +331,18 @@ const shell = {
   },
   search: {
     width: '100%',
-    maxWidth: '260px',
+    maxWidth: '320px',
     padding: '5px 10px',
     fontSize: 'var(--text-sm)',
     border: '1px solid var(--grey-200)',
     background: 'var(--grey-50)',
     color: 'var(--black)',
     outline: 'none',
+  },
+  searchHint: {
+    fontSize: 'var(--text-xs)',
+    color: 'var(--grey-400)',
+    whiteSpace: 'nowrap',
   },
   body: {
     display: 'flex',
@@ -291,7 +373,7 @@ const shell = {
   }),
 }
 
-// ─── Sidebar sub-components ────────────────────────────────────────────────────
+// ── Sidebar sub-components ─────────────────────────────────────────────────────
 
 function SidebarRow({ label, value, faded, encrypted }) {
   return (
@@ -324,12 +406,10 @@ function SidebarSection({ title, badge, defaultOpen = true, children }) {
 function CompanySidebar({ current, onChange }) {
   return (
     <div style={sidebar.root}>
-      {/* Company name */}
       <div style={sidebar.companyHeader}>
         <CompanySwitcher size="17px" current={current} onChange={onChange} />
       </div>
 
-      {/* Operational state */}
       <div style={sidebar.stateRow}>
         <div style={sidebar.stateCell}>
           <span style={sidebar.stateCellLabel}>Cycle</span>
@@ -345,7 +425,6 @@ function CompanySidebar({ current, onChange }) {
         </div>
       </div>
 
-      {/* Account classification */}
       <div style={sidebar.accountBlock}>
         <div style={sidebar.accountRow}>
           <span style={sidebar.accountLabel}>Usage</span>
@@ -357,7 +436,6 @@ function CompanySidebar({ current, onChange }) {
         </div>
       </div>
 
-      {/* Identity */}
       <SidebarSection title="Identity">
         <SidebarRow label="Country" value="France" />
         <SidebarRow label="Creation date" value="26/04/23" />
@@ -369,62 +447,64 @@ function CompanySidebar({ current, onChange }) {
         <SidebarRow label="Address" value="10 rue de Paradis, 75010" />
       </SidebarSection>
 
-      {/* Rates */}
       <SidebarSection title="Rates">
         <SidebarRow label="Taux AT" value="0.700%" />
         <SidebarRow label="Taux VT" value="3%" />
       </SidebarSection>
 
-      {/* Urssaf */}
       <SidebarSection title="Urssaf" badge="Enabled">
         <SidebarRow label="Method" value="SEPA direct debit" />
         <SidebarRow label="Limit date" value="15th of month" />
         <SidebarRow label="Periodicity" value="Monthly" />
       </SidebarSection>
 
-      {/* Agirc-Arrco */}
       <SidebarSection title="Agirc-Arrco" defaultOpen={false}>
         <SidebarRow label="Method" value="SEPA direct debit" />
         <SidebarRow label="Periodicity" value="Monthly" />
       </SidebarSection>
 
-      {/* Prévoyance */}
       <SidebarSection title="Prévoyance" defaultOpen={false}>
         <SidebarRow label="Provider" value="Alan" />
         <SidebarRow label="Method" value="SEPA direct debit" />
       </SidebarSection>
 
-      {/* Mutuelle */}
       <SidebarSection title="Mutuelle" defaultOpen={false}>
         <SidebarRow label="Provider" value="Alan" />
         <SidebarRow label="Method" value="SEPA direct debit" />
       </SidebarSection>
 
-      {/* Retraite */}
       <SidebarSection title="Retraite" defaultOpen={false}>
         <SidebarRow label="Provider" value="Klésia" />
       </SidebarSection>
 
-      {/* Banking */}
       <SidebarSection title="Banking" defaultOpen={false}>
         <SidebarRow label="BIC" encrypted />
         <SidebarRow label="IBAN" encrypted />
+      </SidebarSection>
+
+      <SidebarSection title="Lifecycle" defaultOpen={false}>
+        <SidebarRow label="Service start" value="30/04/23" />
+        <SidebarRow label="State" value="Active" />
+        <SidebarRow label="Controls" value="Activate · Suspend · Churn" faded />
       </SidebarSection>
     </div>
   )
 }
 
-// ─── Version shell ─────────────────────────────────────────────────────────────
+// ── Version shell ──────────────────────────────────────────────────────────────
 
 export default function Version({ activePage }) {
-  const [localPage, setLocalPage] = useState('overview')
+  const [localPage, setLocalPage] = useState('payroll')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
-  useEffect(() => { if (activePage !== undefined) setLocalPage(activePage) }, [activePage])
+  useEffect(() => {
+    if (activePage !== undefined && TABS.some(t => t.id === activePage)) setLocalPage(activePage)
+  }, [activePage])
   const currentPage = localPage
 
   return (
     <div style={shell.version}>
-      {/* Top header — search bar */}
+
+      {/* Header — unified search */}
       <div style={shell.header}>
         <div style={shell.breadcrumb}>
           <span>Companies</span>
@@ -432,15 +512,17 @@ export default function Version({ activePage }) {
           <span style={shell.breadcrumbCurrent}>{currentCompany}</span>
         </div>
         <div style={shell.searchWrap}>
-          <input style={shell.search} type="search" placeholder="Search…" />
+          <input style={shell.search} type="search" placeholder="Search companies, employees, declarations…" />
         </div>
+        <span style={shell.searchHint}>Companies · Employees · Declarations · Documents</span>
       </div>
 
-      {/* Body: sidebar + content area */}
+      {/* Body: persistent sidebar + domain content area */}
       <div style={shell.body}>
         <CompanySidebar current={currentCompany} onChange={setCurrentCompany} />
 
         <div style={shell.contentArea}>
+          {/* Domain tab bar */}
           <div style={shell.tabBar}>
             {TABS.map((t) => (
               <button
@@ -453,9 +535,10 @@ export default function Version({ activePage }) {
             ))}
           </div>
 
-          {currentPage === 'overview' && <Overview />}
-          {currentPage === 'declarations' && <Declarations />}
-          {currentPage === 'dsn' && <DSN />}
+          {currentPage === 'payroll'   && <PayrollPage />}
+          {currentPage === 'people'    && <PeoplePage />}
+          {currentPage === 'documents' && <DocumentsPage />}
+          {currentPage === 'activity'  && <ActivityPage />}
         </div>
       </div>
     </div>
