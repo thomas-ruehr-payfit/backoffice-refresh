@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import V1 from '../variations/v1/Version'
-import V4 from '../variations/v4/Version'
+import V3 from '../variations/v3/Version'
 import V6 from '../variations/v6/Version'
+import V7 from '../variations/v7/Version'
 import V8 from '../variations/v8/Version'
-import V9 from '../variations/v9/Version'
-import V10 from '../variations/v10/Version'
-import V12 from '../variations/v12/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
 
 const s = {
@@ -109,38 +107,28 @@ export default function App() {
         <div style={s.canvasScroll}>
           <div style={s.canvasInner}>
             <div style={s.column}>
-              <div style={s.columnLabel}>v1</div>
+              <div style={s.columnLabel}>V1</div>
               <V1 />
             </div>
 
             <div style={s.column}>
-              <div style={s.columnLabel}>V3 — Workflow-oriented · Intent-driven navigation, persistent action bar (Act)</div>
-              <V4 />
+              <div style={s.columnLabel}>V3 — Three-panel · Global nav strip, persistent company panel, Activity separated right</div>
+              <V3 />
             </div>
 
             <div style={s.column}>
-              <div style={s.columnLabel}>V5 — Three-panel · Global nav strip, persistent company panel, Activity separated right</div>
+              <div style={s.columnLabel}>V6 — Left company panel · Persistent panel with status + company data, no top header</div>
               <V6 />
             </div>
 
             <div style={s.column}>
-              <div style={s.columnLabel}>V7 — IA redesign · Overview + Declarations elevated + expandable nav + Utils tab</div>
+              <div style={s.columnLabel}>V7 — Navigation left / Company right · Minimal nav panel left, full company info dictionary right</div>
+              <V7 />
+            </div>
+
+            <div style={s.column}>
+              <div style={s.columnLabel}>V8 — V6 left header + status chips + vertical nav · metadata-only right panel</div>
               <V8 />
-            </div>
-
-            <div style={s.column}>
-              <div style={s.columnLabel}>V8 — Double tab row · Secondary tab bar for Declarations and Utils sub-navigation</div>
-              <V9 />
-            </div>
-
-            <div style={s.column}>
-              <div style={s.columnLabel}>V9 — Left company panel · Persistent panel with status + company data, no top header</div>
-              <V10 />
-            </div>
-
-            <div style={s.column}>
-              <div style={s.columnLabel}>V11 — Navigation left / Company right · Minimal nav panel left, full company info dictionary right</div>
-              <V12 />
             </div>
           </div>
         </div>
