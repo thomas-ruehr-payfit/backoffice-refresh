@@ -187,10 +187,6 @@ function LeftNavPanel({ current, onChange, activeSub, onSubChange, currentCompan
           </div>
         </div>
 
-        <button title="Connect" style={{ flexShrink: 0, marginTop: '2px', width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: '1px solid var(--grey-200)', cursor: 'pointer', color: 'var(--grey-500)', fontSize: '13px' }}>
-          ⇢
-        </button>
-
         {switcherOpen && (
           <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 300, background: 'var(--white)', border: '1px solid var(--grey-200)', minWidth: '220px', marginTop: '2px' }}>
             {COMPANIES.map(c => (
@@ -223,17 +219,21 @@ function LeftNavPanel({ current, onChange, activeSub, onSubChange, currentCompan
 
       {/* Two-level vertical nav — V7 style */}
       <nav style={{ flex: 1, overflowY: 'auto', paddingTop: '8px', paddingBottom: '8px' }}>
-        {NAV_ITEMS.map(item => {
+        {NAV_ITEMS.map((item) => {
           const isActive = current === item.id
+          const isFirstSecondary = item.id === 'activity'
           return (
             <div key={item.id}>
+              {isFirstSecondary && (
+                <div style={{ height: '1px', background: 'var(--grey-200)', margin: '6px 0' }} />
+              )}
               <button
                 onClick={() => { onChange(item.id); if (item.children) onSubChange(item.children[0].id) }}
                 style={{
                   display: 'block', width: '100%', textAlign: 'left',
                   padding: '6px 16px', fontSize: 'var(--text-sm)',
                   fontWeight: isActive ? 600 : 400,
-                  color: isActive ? 'var(--accent)' : 'var(--grey-600)',
+                  color: isActive ? 'var(--accent)' : isFirstSecondary || item.id === 'utils' ? 'var(--grey-500)' : 'var(--grey-600)',
                   background: isActive && !item.children ? '#EBF0FF' : 'none',
                   border: 'none',
                   borderLeft: isActive ? '2px solid var(--accent)' : '2px solid transparent',
@@ -266,6 +266,14 @@ function LeftNavPanel({ current, onChange, activeSub, onSubChange, currentCompan
           )
         })}
       </nav>
+
+      {/* Connect button — pinned at bottom */}
+      <div style={{ padding: '10px 14px', borderTop: '1px solid var(--grey-200)', flexShrink: 0 }}>
+        <button title="Connect" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '6px 0', background: 'none', border: '1px solid var(--grey-200)', cursor: 'pointer', color: 'var(--grey-500)', fontSize: 'var(--text-xs)', fontFamily: 'inherit', fontWeight: 500 }}>
+          <span style={{ fontSize: '13px' }}>⇢</span> Connect
+        </button>
+      </div>
+
     </div>
   )
 }
@@ -303,14 +311,30 @@ function MetaSection({ title, badge, defaultOpen = false, rows }) {
   )
 }
 
-function RightPanel() {
+function RightPanel({ open, onToggle }) {
   return (
-    <div style={{ width: '240px', flexShrink: 0, borderLeft: '1px solid var(--grey-200)', overflowY: 'auto', background: 'var(--white)' }}>
-      <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {METADATA_SECTIONS.map(s => (
-          <MetaSection key={s.title} title={s.title} badge={s.badge} defaultOpen={s.defaultOpen} rows={s.rows} />
-        ))}
+    <div style={{ flexShrink: 0, borderRight: '1px solid var(--grey-200)', display: 'flex', flexDirection: 'column', background: 'var(--white)', width: open ? '240px' : '32px', transition: 'width 0.15s ease', overflow: 'hidden' }}>
+
+      {/* Toggle button */}
+      <div style={{ flexShrink: 0, display: 'flex', justifyContent: open ? 'flex-end' : 'center', padding: open ? '6px 8px' : '6px 0' }}>
+        <button
+          onClick={onToggle}
+          title={open ? 'Collapse panel' : 'Expand panel'}
+          style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: 'var(--grey-400)', fontFamily: 'inherit' }}
+        >
+          {open ? '‹' : '›'}
+        </button>
       </div>
+
+      {/* Metadata sections */}
+      {open && (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '0 12px 12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {METADATA_SECTIONS.map(s => (
+            <MetaSection key={s.title} title={s.title} badge={s.badge} defaultOpen={s.defaultOpen} rows={s.rows} />
+          ))}
+        </div>
+      )}
+
     </div>
   )
 }
@@ -363,6 +387,7 @@ export default function Version() {
   const [currentPage,    setCurrentPage]    = useState('declarations')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
   const [activeSub,      setActiveSub]      = useState('pending')
+  const [rightOpen,      setRightOpen]      = useState(true)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', minHeight: '700px' }}>
@@ -378,11 +403,11 @@ export default function Version() {
         onCompanyChange={setCurrentCompany}
       />
 
+      <RightPanel open={rightOpen} onToggle={() => setRightOpen(o => !o)} />
+
       <div style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
         <ContentArea page={currentPage} sub={activeSub} />
       </div>
-
-      <RightPanel />
 
     </div>
   )

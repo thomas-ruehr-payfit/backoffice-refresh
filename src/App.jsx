@@ -2,8 +2,9 @@ import { useState } from 'react'
 import V1 from '../variations/v1/Version'
 import V3 from '../variations/v3/Version'
 import V6 from '../variations/v6/Version'
-import V7 from '../variations/v7/Version'
 import V8 from '../variations/v8/Version'
+import V9 from '../variations/v9/Version'
+import V10 from '../variations/v10/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
 
 const s = {
@@ -122,13 +123,18 @@ export default function App() {
             </div>
 
             <div style={s.column}>
-              <div style={s.columnLabel}>V7 — Navigation left / Company right · Minimal nav panel left, full company info dictionary right</div>
-              <V7 />
+              <div style={s.columnLabel}>V8 — V6 left header + status chips + vertical nav · metadata-only right panel</div>
+              <V8 />
             </div>
 
             <div style={s.column}>
-              <div style={s.columnLabel}>V8 — V6 left header + status chips + vertical nav · metadata-only right panel</div>
-              <V8 />
+              <div style={s.columnLabel}>V9 — Left company panel · tab navigation in center · collapsible metadata right</div>
+              <V9 />
+            </div>
+
+            <div style={s.column}>
+              <div style={s.columnLabel}>V10 — BO-IA-V1 sitemap · V9 nav scheme · V8 collapsible data drawer</div>
+              <V10 />
             </div>
           </div>
         </div>

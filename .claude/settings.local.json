@@ -14,7 +14,25 @@
       "Bash(cp -r old-project-backup/src/versions/v5/. variations/v5/)",
       "Bash(npm install:*)",
       "Bash(npm run:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(mv v4:*)",
+      "Bash(mv v6:*)",
+      "Bash(mv v8:*)",
+      "Bash(mv v9:*)",
+      "Bash(mv v10:*)",
+      "Bash(sed -i '' '1s|// V4 — Workflow-oriented|// V2 — Workflow-oriented|' \"/Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v2/Version.jsx\")",
+      "Bash(sed -i '' '1s|// V5 — Three-panel + separated Activity tab|// V3 — Three-panel + separated Activity tab|' \"/Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v3/Version.jsx\")",
+      "Bash(sed -i '' '1s|// V7 — IA redesign: Overview + Declarations elevated + expandable nav + Utils tab|// V4 — IA redesign: Overview + Declarations elevated + expandable nav + Utils tab|' \"/Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v4/Version.jsx\")",
+      "Bash(sed -i '' '2s|// Based on V6 \\(three-panel + togglable company panel\\).|// Based on deleted variation \\(three-panel + togglable company panel\\).|' \"/Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v4/Version.jsx\")",
+      "Bash(sed -i '' '1s|// V7 — IA redesign: Overview + Declarations elevated + expandable nav + Utils tab|// V5 — Double tab row: secondary tab bar for Declarations and Utils sub-navigation|' \"/Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v5/Version.jsx\")",
+      "Bash(sed -i '' 's,// V12 — Three-column layout: left nav panel | center content | right company panel,// V7 — Three-column layout: left nav panel | center content | right company panel,' \"/Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v7/Version.jsx\")",
+      "Bash(sed -i '' 's,// Based on V11.,// Based on deleted variation \\(V11\\).,' \"/Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v7/Version.jsx\")",
+      "Bash(for i:*)",
+      "Bash(do)",
+      "Bash(echo \"=== v$i ===\")",
+      "Read(//Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v$i/**)",
+      "Bash(done)",
+      "Bash(pkill -f vite)"
     ]
   }
 }

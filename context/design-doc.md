@@ -44,3 +44,46 @@ A living document. Sections evolve as the project progresses.
 
 ## Raw Notes
 
+**Most recent sitemap (V8)**
+```
+App
+├── Global nav (expandable strip)
+│   ├── Companies  ← active
+│   ├── Declarations
+│   ├── Billing
+│   ├── History
+│   ├── Settings
+│   └── Account
+│
+├── Left panel
+│   ├── Company switcher (org + name + SIRET + country)
+│   ├── Status chips (cycle, status, plan, employees, usage, origin)
+│   ├── Navigation
+│   │   ├── Declarations
+│   │   │   ├── Pending actions
+│   │   │   ├── Declarations
+│   │   │   └── Configuration
+│   │   ├── People
+│   │   ├── Documents
+│   │   ╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+│   │   ├── Activity
+│   │   └── Utils
+│   │       ├── Environment migration
+│   │       ├── Operations import
+│   │       └── Customer panel
+│   └── Connect (pinned bottom)
+│
+├── Center — content area
+│   └── Content for active section
+│
+└── Right panel (collapsible)
+    ├── Identity
+    ├── Rates
+    ├── Urssaf
+    ├── Agirc-Arrco
+    ├── Prévoyance
+    ├── Mutuelle
+    ├── Retraite
+    ├── Banking
+    └── Lifecycle
+```

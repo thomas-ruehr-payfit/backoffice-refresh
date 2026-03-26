@@ -1,631 +1,414 @@
-// V5 — Three-panel + separated Activity tab
-// Global nav strip on the far left (icon-only, app-level navigation).
-// Rich header bar with overarching business metadata, always visible.
-// Persistent company panel (left) holds reference/config data — SIRET, organisms, banking.
-// Main content area has 3 workflow tabs. Activity is a regular tab pushed to the far right.
+// V6 — Persistent left company panel, no top header
+// Based on V5 (double tab row for Declarations + Utils sub-navigation).
+// Key changes:
+//   - Header removed entirely
+//   - Persistent left panel replaces header + togglable company panel
+//   - Left panel: company name/switcher → status chips → Connect → scrollable company data
+//   - Layout: GlobalNav | LeftCompanyPanel | TabBar + Content
 
 import { useState } from 'react'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const SIREN = '457 857 456'
+const ORG     = 'Faces org'
+const COUNTRY = 'FR'
 const COMPANIES = [
-  { name: 'Smiles.Inc', siret: '45785745673245' },
-  { name: 'Smiles Operations', siret: '45785745600012' },
+  { name: 'Smiles.Inc',          siret: '45785745673245' },
+  { name: 'Smiles Operations',   siret: '45785745600012' },
   { name: 'Smiles Technologies', siret: '45785745600089' },
 ]
 
-const MAIN_TABS = ['people', 'documents', 'declarations']
+const MAIN_TABS = ['declarations', 'people', 'documents']
 const ALL_TABS = [
+  { id: 'declarations', label: 'Declarations' },
   { id: 'people',       label: 'People' },
   { id: 'documents',    label: 'Documents' },
-  { id: 'declarations', label: 'Declarations' },
   { id: 'activity',     label: 'Activity' },
+  { id: 'utils',        label: 'Utils' },
 ]
 
-// ── Company switcher ──────────────────────────────────────────────────────────
+// ── SIRET display — SIREN (9) highlighted, NIC (5) faded ─────────────────────
 
-const sw = {
-  wrap: { position: 'relative', display: 'inline-flex', flexDirection: 'column', gap: '1px' },
-  siren: { fontSize: '10px', color: 'var(--grey-400)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' },
-  trigger: {
-    display: 'inline-flex', alignItems: 'center', gap: '4px',
-    background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-    fontSize: '14px', fontWeight: 700, color: 'var(--black)',
-    fontFamily: 'inherit',
-  },
-  chevron: { fontSize: '11px', color: 'var(--grey-400)', fontWeight: 400 },
-  dropdown: {
-    position: 'absolute', top: '100%', left: 0, zIndex: 300,
-    background: 'var(--white)', border: '1px solid var(--grey-200)',
-    minWidth: '260px', marginTop: '4px',
-  },
-  item: (active) => ({
-    padding: '7px 12px', cursor: 'pointer',
-    background: active ? '#EBF0FF' : 'var(--white)',
-    borderBottom: '1px solid var(--grey-100)',
-    display: 'flex', flexDirection: 'column', gap: '2px',
-  }),
-  itemName: (active) => ({ fontSize: 'var(--text-sm)', fontWeight: 600, color: active ? 'var(--accent)' : 'var(--black)' }),
-  itemSiret: { fontSize: '10px', color: 'var(--grey-400)', fontFamily: 'var(--font-mono)' },
-}
-
-function CompanySwitcher({ current, onChange }) {
-  const [open, setOpen] = useState(false)
+function SiretDisplay({ siret }) {
+  const siren = siret.slice(0, 9)
+  const nic   = siret.slice(9)
   return (
-    <div style={sw.wrap}>
-      <span style={sw.siren}>{SIREN}</span>
-      <button style={sw.trigger} onClick={() => setOpen(o => !o)}>
-        <span>{current}</span>
-        <span style={sw.chevron}>▾</span>
-      </button>
-      {open && (
-        <div style={sw.dropdown}>
-          {COMPANIES.map(c => (
-            <div key={c.name} style={sw.item(c.name === current)}
-              onClick={() => { onChange(c.name); setOpen(false) }}>
-              <span style={sw.itemName(c.name === current)}>{c.name}</span>
-              <span style={sw.itemSiret}>{c.siret}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-xs)', letterSpacing: '0.04em' }}>
+      <span style={{ color: 'var(--black)', fontWeight: 700 }}>{siren}</span>
+      <span style={{ color: 'var(--grey-400)' }}>{nic}</span>
+    </span>
   )
 }
 
-// ── Tools dropdown ────────────────────────────────────────────────────────────
+// ── Status chips ──────────────────────────────────────────────────────────────
 
-const TOOLS = [
-  { label: 'Environment migration', note: 'Copy company to staging' },
-  { label: 'Operations import',     note: 'Bulk operations file upload' },
-  { label: 'Submission restrictions', note: 'Override declaration submission rules' },
+const STATUS_CHIPS = [
+  { label: 'Cycle',     value: 'Mar 26 (125)', accent: true,  dim: false },
+  { label: 'Status',    value: 'Active',       accent: true,  dim: false },
+  { label: 'Plan',      value: 'RH+',          accent: false, dim: false },
+  { label: 'Employees', value: '7',            accent: false, dim: false },
+  { label: 'Usage',     value: 'Client',       accent: false, dim: true  },
+  { label: 'Origin',    value: 'Migration',    accent: false, dim: true  },
 ]
 
-function ToolsMenu() {
-  const [open, setOpen] = useState(false)
+// ── Left company panel ────────────────────────────────────────────────────────
+
+function LeftCompanyPanel({ current, onChange }) {
+  const [switcherOpen, setSwitcherOpen] = useState(false)
+  const company = COMPANIES.find(c => c.name === current) || COMPANIES[0]
+
   return (
-    <div style={{ position: 'relative' }}>
-      <button
-        style={{
-          padding: '4px 10px',
-          fontSize: 'var(--text-xs)',
-          fontWeight: 600,
-          color: 'var(--grey-700)',
-          background: 'var(--white)',
-          border: '1px solid var(--grey-200)',
-          cursor: 'pointer',
-          fontFamily: 'inherit',
-          display: 'flex', alignItems: 'center', gap: '4px',
-        }}
-        onClick={() => setOpen(o => !o)}
-      >
-        Admin <span style={{ fontSize: '10px', color: 'var(--grey-400)' }}>▾</span>
-      </button>
-      {open && (
-        <div style={{
-          position: 'absolute', top: '100%', right: 0, zIndex: 300,
-          background: 'var(--white)', border: '1px solid var(--grey-200)',
-          minWidth: '240px', marginTop: '4px',
-        }}>
-          {TOOLS.map(t => (
-            <div key={t.label}
-              style={{
-                padding: '8px 12px', borderBottom: '1px solid var(--grey-100)',
-                cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: '2px',
-              }}
-              onClick={() => setOpen(false)}
-            >
-              <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--black)' }}>{t.label}</span>
-              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)' }}>{t.note}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
+    <div style={{
+      width: '220px', flexShrink: 0,
+      borderRight: '1px solid var(--grey-200)',
+      display: 'flex', flexDirection: 'column',
+      background: 'var(--white)', overflowY: 'auto',
+    }}>
 
-// ── Global nav strip ──────────────────────────────────────────────────────────
-
-const gn = {
-  strip: {
-    width: '48px',
-    flexShrink: 0,
-    background: 'var(--grey-50)',
-    borderRight: '1px solid var(--grey-200)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingTop: '10px',
-    paddingBottom: '10px',
-  },
-  logo: {
-    width: '28px',
-    height: '28px',
-    borderRadius: '50%',
-    background: 'var(--grey-200)',
-    marginBottom: '8px',
-    flexShrink: 0,
-  },
-  iconBtn: (active) => ({
-    width: '36px',
-    height: '36px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    fontSize: '15px',
-    color: active ? 'var(--accent)' : 'var(--grey-400)',
-    background: active ? '#EBF0FF' : 'transparent',
-    border: 'none',
-    borderRadius: '4px',
-    fontFamily: 'inherit',
-  }),
-  divider: {
-    width: '24px',
-    height: '1px',
-    background: 'var(--grey-200)',
-    margin: '6px 0',
-  },
-  middle: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '2px',
-  },
-  bottom: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '2px',
-  },
-}
-
-function NavBtn({ icon, label, active }) {
-  return (
-    <button style={gn.iconBtn(active)} title={label}>
-      {icon}
-    </button>
-  )
-}
-
-function GlobalNav() {
-  return (
-    <div style={gn.strip}>
-
-      {/* Logo */}
-      <div style={gn.logo} />
-
-      {/* Search */}
-      <NavBtn icon="⌕" label="Search" />
-
-      <div style={gn.divider} />
-
-      {/* Primary nav — centered */}
-      <div style={gn.middle}>
-        <NavBtn icon="⊞" label="Companies" active />
-        <NavBtn icon="≡" label="Declarations" />
-        <NavBtn icon="⊟" label="Billing" />
-      </div>
-
-      <div style={gn.divider} />
-
-      {/* Bottom nav */}
-      <div style={gn.bottom}>
-        <NavBtn icon="⏱" label="History" />
-        <NavBtn icon="⚙" label="Settings" />
-        <NavBtn icon="⊙" label="Account" />
-      </div>
-
-    </div>
-  )
-}
-
-// ── Header bar ────────────────────────────────────────────────────────────────
-
-const HEADER_CHIPS = [
-  { label: 'Cycle',   value: 'Mar 26 (125)', accent: true  },
-  { label: 'Status',  value: 'Active',      accent: true  },
-  { label: 'Plan',    value: 'RH+',         accent: false },
-  { label: 'Usage',   value: 'Client',      accent: false },
-  { label: 'Origin',  value: 'Migration',   accent: false },
-  { label: 'Employees', value: '7',         accent: false },
-]
-
-const hb = {
-  bar: {
-    display: 'flex',
-    alignItems: 'stretch',
-    gap: '1px',
-    background: 'var(--grey-200)',
-    borderBottom: '2px solid var(--grey-200)',
-    flexShrink: 0,
-  },
-  company: {
-    background: 'var(--white)',
-    padding: '7px 14px',
-    display: 'flex',
-    alignItems: 'center',
-    flexShrink: 0,
-    borderRight: 'none',
-  },
-  chips: {
-    background: 'var(--grey-200)',
-    display: 'flex',
-    alignItems: 'stretch',
-    flex: 1,
-    gap: '1px',
-  },
-  chip: {
-    background: 'var(--white)',
-    padding: '5px 12px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    gap: '1px',
-  },
-  chipLabel: {
-    fontSize: '10px',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.07em',
-    color: 'var(--grey-400)',
-  },
-  chipValue: (accent) => ({
-    fontSize: 'var(--text-sm)',
-    fontWeight: 700,
-    color: accent ? 'var(--accent)' : 'var(--black)',
-  }),
-  actions: {
-    background: 'var(--white)',
-    padding: '7px 14px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    flexShrink: 0,
-  },
-  connectBtn: {
-    padding: '4px 12px',
-    fontSize: 'var(--text-xs)',
-    fontWeight: 600,
-    color: 'var(--grey-700)',
-    background: 'var(--white)',
-    border: '1px solid var(--grey-200)',
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-  },
-}
-
-function HeaderBar({ current, onChange }) {
-  return (
-    <div style={hb.bar}>
-      <div style={hb.company}>
-        <CompanySwitcher current={current} onChange={onChange} />
-      </div>
-
-      <div style={hb.chips}>
-        {HEADER_CHIPS.map(({ label, value, accent }) => (
-          <div key={label} style={hb.chip}>
-            <span style={hb.chipLabel}>{label}</span>
-            <span style={hb.chipValue(accent)}>{value}</span>
+      {/* Company identity + switcher */}
+      <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--grey-200)', position: 'relative', display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <button
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '5px', marginBottom: '4px' }}
+            onClick={() => setSwitcherOpen(o => !o)}
+          >
+            <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--grey-400)' }}>{ORG}</span>
+            <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--grey-500)', background: 'var(--grey-100)', padding: '0 5px', borderRadius: '2px' }}>{COMPANIES.length}</span>
+            <span style={{ fontSize: '9px', color: 'var(--grey-300)' }}>▾</span>
+          </button>
+          <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--black)', lineHeight: 1.2, marginBottom: '4px' }}>{current}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--grey-600)', background: 'var(--grey-100)', padding: '1px 5px', letterSpacing: '0.04em' }}>{COUNTRY}</span>
+            <SiretDisplay siret={company.siret} />
           </div>
+        </div>
+
+        {/* Connect icon button */}
+        <button title="Connect" style={{ flexShrink: 0, marginTop: '2px', width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: '1px solid var(--grey-200)', cursor: 'pointer', color: 'var(--grey-500)', fontSize: '13px' }}>
+          ⇢
+        </button>
+
+        {switcherOpen && (
+          <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 300, background: 'var(--white)', border: '1px solid var(--grey-200)', minWidth: '220px', marginTop: '2px' }}>
+            {COMPANIES.map(c => (
+              <div key={c.name}
+                style={{ padding: '8px 14px', cursor: 'pointer', background: c.name === current ? '#EBF0FF' : 'var(--white)', borderBottom: '1px solid var(--grey-100)', display: 'flex', flexDirection: 'column', gap: '3px' }}
+                onClick={() => { onChange(c.name); setSwitcherOpen(false) }}
+              >
+                <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: c.name === current ? 'var(--accent)' : 'var(--black)' }}>{c.name}</span>
+                <SiretDisplay siret={c.siret} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Status chips */}
+      <div style={{ padding: '8px 14px', borderBottom: '1px solid var(--grey-200)', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+        {STATUS_CHIPS.map(({ label, value, accent, dim }) => (
+          <span key={label} style={{
+            fontSize: 'var(--text-xs)', fontWeight: accent ? 700 : 500,
+            color: accent ? 'var(--accent)' : dim ? 'var(--grey-300)' : 'var(--grey-700)',
+            background: accent ? '#EBF0FF' : dim ? 'transparent' : 'var(--grey-100)',
+            border: `1px solid ${accent ? 'var(--accent)' : dim ? 'transparent' : 'var(--grey-200)'}`,
+            padding: '1px 6px',
+          }}>
+            {value}
+          </span>
         ))}
       </div>
 
-      <div style={hb.actions}>
-        <ToolsMenu />
-        <button style={hb.connectBtn}>Connect</button>
-      </div>
+      {/* Core company data */}
+      {[
+        { title: 'Identity', defaultOpen: true, rows: [
+          { label: 'SIRET',    value: '45785745673245' },
+          { label: 'Code NAF', value: '6312Z',                    faded: true },
+          { label: 'IDCC',     value: '1486' },
+          { label: 'Country',  value: 'France' },
+          { label: 'Created',  value: '26/04/23' },
+          { label: 'Address',  value: '10 rue de Paradis, 75010' },
+        ]},
+        { title: 'Rates', rows: [
+          { label: 'Taux AT', value: '0.700%' },
+          { label: 'Taux VT', value: '3%' },
+        ]},
+        { title: 'Urssaf', badge: 'Enabled', rows: [
+          { label: 'Method',      value: 'SEPA direct debit' },
+          { label: 'Limit date',  value: '15th of month' },
+          { label: 'Periodicity', value: 'Monthly' },
+        ]},
+        { title: 'Agirc-Arrco', rows: [
+          { label: 'Method',      value: 'SEPA direct debit' },
+          { label: 'Periodicity', value: 'Monthly' },
+        ]},
+        { title: 'Banking', rows: [
+          { label: 'BIC',  encrypted: true },
+          { label: 'IBAN', encrypted: true },
+        ]},
+        { title: 'Lifecycle', rows: [
+          { label: 'State', value: 'Active' },
+        ]},
+      ].map(section => (
+        <CollapsibleSection key={section.title} title={section.title} badge={section.badge} defaultOpen={section.defaultOpen}>
+          {section.rows.map(row => (
+            <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '3px 12px', borderBottom: '1px solid var(--grey-100)', gap: '8px' }}>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-600)', whiteSpace: 'nowrap', flexShrink: 0 }}>{row.label}</span>
+              {row.encrypted
+                ? <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', fontFamily: 'var(--font-mono)' }}>[Encrypted]</span>
+                : <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500, color: row.faded ? 'var(--grey-400)' : 'var(--black)', textAlign: 'right' }}>{row.value}</span>
+              }
+            </div>
+          ))}
+        </CollapsibleSection>
+      ))}
     </div>
   )
 }
 
-// ── Company panel (always visible, left) ──────────────────────────────────────
-
-const cp = {
-  panel: {
-    width: '240px',
-    flexShrink: 0,
-    borderRight: '1px solid var(--grey-200)',
-    display: 'flex',
-    flexDirection: 'column',
-    background: 'var(--white)',
-    overflowY: 'auto',
-  },
-  section: {
-    borderBottom: '1px solid var(--grey-200)',
-  },
-  sectionHead: {
-    padding: '4px 12px',
-    fontSize: '10px',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    color: 'var(--grey-400)',
-    background: 'var(--grey-50)',
-    borderBottom: '1px solid var(--grey-100)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  badge: (ok) => ({
-    fontSize: '10px',
-    fontWeight: 700,
-    padding: '0 4px',
-    background: ok ? '#EBF0FF' : 'var(--grey-100)',
-    color: ok ? 'var(--accent)' : 'var(--grey-500)',
-    border: `1px solid ${ok ? 'var(--accent)' : 'var(--grey-200)'}`,
-  }),
-  row: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    padding: '3px 12px',
-    borderBottom: '1px solid var(--grey-100)',
-    gap: '8px',
-  },
-  label: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-600)',
-    whiteSpace: 'nowrap',
-    flexShrink: 0,
-  },
-  value: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--black)',
-    fontWeight: 500,
-    textAlign: 'right',
-  },
-  valueFaded: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-400)',
-    textAlign: 'right',
-  },
-  encrypted: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-400)',
-    fontFamily: 'var(--font-mono)',
-    textAlign: 'right',
-  },
-  lifecycleControl: {
-    margin: '6px 10px',
-    padding: '5px 8px',
-    fontSize: 'var(--text-xs)',
-    color: 'var(--grey-500)',
-    background: 'var(--grey-50)',
-    border: '1px dashed var(--grey-200)',
-    textAlign: 'center',
-  },
-}
-
-function PanelRow({ label, value, faded, encrypted }) {
-  return (
-    <div style={cp.row}>
-      <span style={cp.label}>{label}</span>
-      {encrypted
-        ? <span style={cp.encrypted}>[Encrypted]</span>
-        : <span style={faded ? cp.valueFaded : cp.value}>{value}</span>
-      }
-    </div>
-  )
-}
-
-function PanelSection({ title, badge, defaultOpen = false, children }) {
+function CollapsibleSection({ title, badge, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div style={cp.section}>
+    <div style={{ borderBottom: '1px solid var(--grey-200)' }}>
       <div
-        style={{ ...cp.sectionHead, cursor: 'pointer', userSelect: 'none', justifyContent: 'space-between' }}
         onClick={() => setOpen(o => !o)}
+        style={{ padding: '4px 12px', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--grey-400)', background: 'var(--grey-50)', borderBottom: open ? '1px solid var(--grey-100)' : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
       >
         <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           {title}
-          {badge && <span style={cp.badge(badge === 'Enabled')}>{badge}</span>}
+          {badge && <span style={{ fontSize: '10px', fontWeight: 700, padding: '0 4px', background: '#EBF0FF', color: 'var(--accent)', border: '1px solid var(--accent)' }}>{badge}</span>}
         </span>
-        <span style={{ fontSize: '10px', color: 'var(--grey-400)', fontFamily: 'var(--font-mono)', fontWeight: 400 }}>
-          {open ? '−' : '+'}
-        </span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 400 }}>{open ? '−' : '+'}</span>
       </div>
       {open && children}
     </div>
   )
 }
 
-function CompanyPanel() {
+// ── Global nav strip — expandable ─────────────────────────────────────────────
+
+const NAV_ITEMS_PRIMARY = [
+  { icon: '⊞', label: 'Companies', active: true  },
+  { icon: '≡', label: 'Declarations', active: false },
+  { icon: '⊟', label: 'Billing', active: false },
+]
+const NAV_ITEMS_BOTTOM = [
+  { icon: '⏱', label: 'History' },
+  { icon: '⚙', label: 'Settings' },
+  { icon: '⊙', label: 'Account' },
+]
+
+function GlobalNav() {
+  const [expanded, setExpanded] = useState(false)
+  const width = expanded ? '160px' : '48px'
+
+  const btnStyle = (active) => ({
+    width: expanded ? '144px' : '36px',
+    height: '36px',
+    display: 'flex', alignItems: 'center',
+    justifyContent: expanded ? 'flex-start' : 'center',
+    gap: expanded ? '10px' : 0,
+    paddingLeft: expanded ? '10px' : 0,
+    cursor: 'pointer',
+    fontSize: '15px',
+    color: active ? 'var(--accent)' : 'var(--grey-400)',
+    background: active ? '#EBF0FF' : 'transparent',
+    border: 'none', borderRadius: '4px',
+    fontFamily: 'inherit',
+    flexShrink: 0,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+  })
+
   return (
-    <div style={cp.panel}>
+    <div style={{
+      width,
+      flexShrink: 0,
+      background: 'var(--grey-50)',
+      borderRight: '1px solid var(--grey-200)',
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      paddingTop: '10px', paddingBottom: '10px',
+      transition: 'width 0.15s ease',
+      overflow: 'hidden',
+    }}>
+      {/* Logo */}
+      <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'var(--grey-200)', marginBottom: '8px', flexShrink: 0 }} />
 
-      <PanelSection title="Identity" defaultOpen>
-        <PanelRow label="SIRET"    value="45785745673245" />
-        <PanelRow label="Code NAF" value="6312Z" faded />
-        <PanelRow label="IDCC"     value="1486" />
-        <PanelRow label="Country"  value="France" />
-        <PanelRow label="Created"  value="26/04/23" />
-        <PanelRow label="Address"  value="10 rue de Paradis, 75010" />
-      </PanelSection>
+      {/* Search */}
+      <button style={btnStyle(false)} title="Search">
+        <span>⌕</span>
+        {expanded && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500 }}>Search</span>}
+      </button>
 
-      <PanelSection title="Rates">
-        <PanelRow label="Taux AT" value="0.700%" />
-        <PanelRow label="Taux VT" value="3%" />
-      </PanelSection>
+      <div style={{ width: expanded ? '144px' : '24px', height: '1px', background: 'var(--grey-200)', margin: '6px 0' }} />
 
-      <PanelSection title="Urssaf" badge="Enabled">
-        <PanelRow label="Method"      value="SEPA direct debit" />
-        <PanelRow label="Limit date"  value="15th of month" />
-        <PanelRow label="Periodicity" value="Monthly" />
-      </PanelSection>
+      {/* Primary nav — centered */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+        {NAV_ITEMS_PRIMARY.map(({ icon, label, active }) => (
+          <button key={label} style={btnStyle(active)} title={label}>
+            <span>{icon}</span>
+            {expanded && <span style={{ fontSize: 'var(--text-xs)', fontWeight: active ? 600 : 400 }}>{label}</span>}
+          </button>
+        ))}
+      </div>
 
-      <PanelSection title="Agirc-Arrco">
-        <PanelRow label="Method"      value="SEPA direct debit" />
-        <PanelRow label="Periodicity" value="Monthly" />
-      </PanelSection>
+      <div style={{ width: expanded ? '144px' : '24px', height: '1px', background: 'var(--grey-200)', margin: '6px 0' }} />
 
-      <PanelSection title="Prévoyance">
-        <PanelRow label="Provider" value="Alan" />
-        <PanelRow label="Method"   value="SEPA direct debit" />
-      </PanelSection>
+      {/* Bottom nav */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+        {NAV_ITEMS_BOTTOM.map(({ icon, label }) => (
+          <button key={label} style={btnStyle(false)} title={label}>
+            <span>{icon}</span>
+            {expanded && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 400 }}>{label}</span>}
+          </button>
+        ))}
+      </div>
 
-      <PanelSection title="Mutuelle">
-        <PanelRow label="Provider" value="Alan" />
-        <PanelRow label="Method"   value="SEPA direct debit" />
-      </PanelSection>
+      <div style={{ width: expanded ? '144px' : '24px', height: '1px', background: 'var(--grey-200)', margin: '6px 0' }} />
 
-      <PanelSection title="Retraite">
-        <PanelRow label="Provider" value="Klésia" />
-      </PanelSection>
-
-      <PanelSection title="Banking">
-        <PanelRow label="BIC"  encrypted />
-        <PanelRow label="IBAN" encrypted />
-      </PanelSection>
-
-      <PanelSection title="Lifecycle">
-        <PanelRow label="State" value="Active" />
-        <div style={cp.lifecycleControl}>
-          Activate · Suspend · Churn · Archive
-        </div>
-      </PanelSection>
-
+      {/* Expand / collapse toggle */}
+      <button
+        onClick={() => setExpanded(o => !o)}
+        style={{
+          width: '36px', height: '28px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontSize: '13px', color: 'var(--grey-400)',
+          alignSelf: expanded ? 'flex-end' : 'center',
+          marginRight: expanded ? '2px' : 0,
+        }}
+        title={expanded ? 'Collapse nav' : 'Expand nav'}
+      >
+        {expanded ? '‹' : '›'}
+      </button>
     </div>
   )
 }
+
 
 // ── Tab bar ───────────────────────────────────────────────────────────────────
 
 function TabBar({ current, onChange }) {
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'stretch',
-      padding: '0 16px',
-      borderBottom: '1px solid var(--grey-200)',
-      background: 'var(--white)',
-      flexShrink: 0,
-    }}>
-      {/* Primary workflow tabs — left-aligned */}
+    <div style={{ display: 'flex', alignItems: 'stretch', padding: '0 16px', borderBottom: '1px solid var(--grey-200)', background: 'var(--white)', flexShrink: 0 }}>
+
+      {/* Primary domain tabs — left */}
       {ALL_TABS.filter(t => MAIN_TABS.includes(t.id)).map(t => (
-        <button
-          key={t.id}
+        <button key={t.id}
           style={{
-            padding: '7px 14px',
-            fontSize: 'var(--text-sm)',
+            padding: '7px 14px', fontSize: 'var(--text-sm)',
             fontWeight: current === t.id ? 600 : 400,
             color: current === t.id ? 'var(--accent)' : 'var(--grey-600)',
-            cursor: 'pointer',
-            background: 'none',
-            border: 'none',
+            cursor: 'pointer', background: 'none', border: 'none',
             borderBottom: current === t.id ? '2px solid var(--accent)' : '2px solid transparent',
             fontFamily: 'inherit',
           }}
           onClick={() => onChange(t.id)}
-        >
-          {t.label}
-        </button>
+        >{t.label}</button>
       ))}
 
-      {/* Spacer — pushes Activity to the right */}
+      {/* Spacer */}
       <div style={{ flex: 1 }} />
 
-      {/* Activity tab — visually separated, right-aligned */}
+      {/* Cross-domain utility tabs — right */}
       {ALL_TABS.filter(t => !MAIN_TABS.includes(t.id)).map(t => (
-        <button
-          key={t.id}
+        <button key={t.id}
           style={{
-            padding: '7px 14px',
-            fontSize: 'var(--text-sm)',
+            padding: '7px 14px', fontSize: 'var(--text-sm)',
             fontWeight: current === t.id ? 600 : 400,
             color: current === t.id ? 'var(--grey-700)' : 'var(--grey-400)',
-            cursor: 'pointer',
-            background: 'none',
-            border: 'none',
+            cursor: 'pointer', background: 'none', border: 'none',
             borderBottom: current === t.id ? '2px solid var(--grey-400)' : '2px solid transparent',
-            fontFamily: 'inherit',
             borderLeft: '1px solid var(--grey-200)',
+            fontFamily: 'inherit',
           }}
           onClick={() => onChange(t.id)}
-        >
-          {t.label}
-        </button>
+        >{t.label}</button>
       ))}
     </div>
   )
 }
 
-// ── Tab content placeholders ──────────────────────────────────────────────────
+// ── Tab content ───────────────────────────────────────────────────────────────
 
 function Section({ title, note, height = 160 }) {
   return (
-    <div style={{
-      background: 'var(--grey-50)',
-      border: '1px dashed var(--grey-200)',
-      minHeight: `${height}px`,
-      display: 'flex',
-      flexDirection: 'column',
-      padding: '10px 14px',
-      gap: '4px',
-    }}>
-      <span style={{
-        fontSize: 'var(--text-xs)',
-        fontWeight: 700,
-        color: 'var(--grey-700)',
-        textTransform: 'uppercase',
-        letterSpacing: '0.06em',
-      }}>
+    <div style={{ background: 'var(--grey-50)', border: '1px dashed var(--grey-200)', minHeight: `${height}px`, display: 'flex', flexDirection: 'column', padding: '10px 14px', gap: '4px' }}>
+      <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--grey-700)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         {title}
       </span>
-      {note && (
-        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', lineHeight: 1.5 }}>
-          {note}
-        </span>
-      )}
+      {note && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', lineHeight: 1.5 }}>{note}</span>}
     </div>
   )
 }
 
-const pageWrap = { padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }
+const pw = { padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }
 
-function DeclarationsPage() {
+
+const DECLARATION_SECTIONS = [
+  { id: 'pending',       label: 'Pending actions', note: 'To-do for this company — declarations to generate, validate, or send',             height: 200 },
+  { id: 'declarations',  label: 'Declarations',    note: 'Grouped declaration documents — DSN / Déclarations / Scheduled — status by period', height: 280 },
+  { id: 'configuration', label: 'Configuration',   note: 'Declaration-level settings — blocking rules, submission restrictions',              height: 120 },
+]
+
+function DeclarationsPage({ activeSection }) {
+  const section = DECLARATION_SECTIONS.find(s => s.id === activeSection)
   return (
-    <div style={pageWrap}>
-      <Section title="Declarations list"
-        note="Status per period — generated / validated / sent — generation triggers"
-        height={480} />
+    <div style={{ ...pw, flex: 1 }}>
+      <Section title={section.label} note={section.note} height={section.height} />
     </div>
   )
 }
 
 function PeoplePage() {
   return (
-    <div style={pageWrap}>
-      <Section title="Admin access"
-        note="Current admins — temporary connect access — add / remove"
-        height={160} />
-      <Section title="Employee list"
-        note="Headcount chart + table — employee status — onboarding and contract management"
-        height={360} />
+    <div style={pw}>
+      <Section title="Admin access"    note="Current admins — temporary connect access — add / remove" height={160} />
+      <Section title="Employee list"   note="Headcount chart + table — employee status — onboarding and contract management" height={360} />
     </div>
   )
 }
 
 function DocumentsPage() {
+  return <div style={pw}><Section title="Files archive" note="Filterable by type, period, and date — downloadable documents" height={480} /></div>
+}
+
+function ActivityPage() {
+  return <div style={pw}><Section title="Timeline" note="Chronological event log — filterable by type: declarations, config changes, access events" height={600} /></div>
+}
+
+const UTILS_TOOLS = [
+  { id: 'migration', label: 'Environment migration', note: 'Copy company to staging or production environment' },
+  { id: 'import',    label: 'Operations import',     note: 'Bulk operations file upload' },
+  { id: 'customer',  label: 'Customer panel',        note: 'Near-deprecated — still active for Spain. Grouped here pending full deprecation.' },
+]
+
+function UtilsPage({ activeTool }) {
+  const tool = UTILS_TOOLS.find(t => t.id === activeTool)
   return (
-    <div style={pageWrap}>
-      <Section title="Files archive"
-        note="Filterable by type, period, and date — downloadable documents"
-        height={480} />
+    <div style={{ ...pw, flex: 1 }}>
+      <Section title={tool.label} note={tool.note} height={200} />
     </div>
   )
 }
 
-function ActivityPage() {
+// ── Sub tab bar ───────────────────────────────────────────────────────────────
+
+function SubTabBar({ items, current, onChange }) {
   return (
-    <div style={pageWrap}>
-      <Section title="Timeline"
-        note="Chronological event log — filterable by type: declarations, config changes, access events"
-        height={600} />
+    <div style={{ display: 'flex', alignItems: 'stretch', padding: '0 16px', borderBottom: '1px solid var(--grey-200)', background: 'var(--grey-50)', flexShrink: 0 }}>
+      {items.map(item => (
+        <button key={item.id}
+          style={{
+            padding: '5px 14px', fontSize: 'var(--text-xs)',
+            fontWeight: current === item.id ? 600 : 400,
+            color: current === item.id ? 'var(--black)' : 'var(--grey-500)',
+            cursor: 'pointer', background: 'none', border: 'none',
+            borderBottom: current === item.id ? '2px solid var(--black)' : '2px solid transparent',
+            fontFamily: 'inherit',
+          }}
+          onClick={() => onChange(item.id)}
+        >{item.label}</button>
+      ))}
     </div>
   )
 }
@@ -633,37 +416,36 @@ function ActivityPage() {
 // ── Version shell ─────────────────────────────────────────────────────────────
 
 export default function Version() {
-  const [currentPage, setCurrentPage] = useState('people')
+  const [currentPage,    setCurrentPage]    = useState('declarations')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
+  const [activeSection,  setActiveSection]  = useState('pending')
+  const [activeTool,     setActiveTool]     = useState('migration')
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', minHeight: '700px' }}>
 
-      {/* ── Back Office level — global nav, full height ── */}
+      {/* Back Office level — expandable global nav */}
       <GlobalNav />
 
-      {/* ── Company level — header + panel + content ── */}
+      {/* Persistent left company panel */}
+      <LeftCompanyPanel current={currentCompany} onChange={setCurrentCompany} />
+
+      {/* Content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <TabBar current={currentPage} onChange={setCurrentPage} />
 
-        {/* Company header */}
-        <HeaderBar current={currentCompany} onChange={setCurrentCompany} />
+        {currentPage === 'declarations' && (
+          <SubTabBar items={DECLARATION_SECTIONS} current={activeSection} onChange={setActiveSection} />
+        )}
+        {currentPage === 'utils' && (
+          <SubTabBar items={UTILS_TOOLS} current={activeTool} onChange={setActiveTool} />
+        )}
 
-        {/* Company body: data panel + content area */}
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-
-          {/* Persistent company reference panel */}
-          <CompanyPanel />
-
-          {/* Tab content area */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-            <TabBar current={currentPage} onChange={setCurrentPage} />
-
-            {currentPage === 'declarations' && <DeclarationsPage />}
-            {currentPage === 'people'       && <PeoplePage />}
-            {currentPage === 'documents'    && <DocumentsPage />}
-            {currentPage === 'activity'     && <ActivityPage />}
-          </div>
-        </div>
+        {currentPage === 'declarations' && <DeclarationsPage activeSection={activeSection} />}
+        {currentPage === 'people'       && <PeoplePage />}
+        {currentPage === 'documents'    && <DocumentsPage />}
+        {currentPage === 'activity'     && <ActivityPage />}
+        {currentPage === 'utils'        && <UtilsPage activeTool={activeTool} />}
       </div>
     </div>
   )
