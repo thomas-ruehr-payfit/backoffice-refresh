@@ -5,7 +5,7 @@ const s = {
   wrap: {
     flex: 1,
     overflow: 'auto',
-    padding: '56px',
+    padding: '56px 56px 120px',
     display: 'flex',
     justifyContent: 'center',
   },

@@ -1,9 +1,5 @@
 # Design Document — BackOffice
 
-A living document capturing the validated direction for the HR/Payroll Backoffice internal tool.
-
----
-
 ## Who We Optimise For
 
 1. **Internal Declaration & Payroll Experts** — Internal specialists handling client declarations and payroll daily. They need stability, efficiency, and fast access to large volumes of data and files. Declaration experts operate primarily within the Declarations section; payroll experts share the same needs but focus on payroll data and access the client app through the backoffice.
@@ -96,8 +92,3 @@ The intent is to establish a clear navigation structure guided by two principles
 
 2. The proposed structure enables a clean restructuration, but the underlying logic remains fragile — particularly around Operations, Utilities, and Declaration Settings. The grouping works for now, but the overall structure will likely need to be revisited as the product evolves.
 
----
-
-## Open Questions
-
-_To be filled in._

@@ -53,6 +53,12 @@ input {
 .design-doc h2 { font-size: 20px; font-weight: 600; margin-top: 48px; margin-bottom: 16px; color: var(--black); border-bottom: 1px solid var(--grey-100); padding-bottom: 8px; }
 .design-doc h3 { font-size: 17px; font-weight: 600; margin-top: 40px; margin-bottom: 12px; color: var(--grey-800); }
 .design-doc h4 { font-size: 15px; font-weight: 600; margin-top: 28px; margin-bottom: 10px; color: var(--grey-600); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.design-doc--sm { font-size: 14px; }
+.design-doc--sm h1 { font-size: 22px; }
+.design-doc--sm h2 { font-size: 17px; }
+.design-doc--sm h3 { font-size: 15px; }
+.design-doc--sm h4 { font-size: 13px; }
 .design-doc p { margin-bottom: 12px; color: var(--grey-800); }
 .design-doc ul, .design-doc ol { padding-left: 20px; margin-bottom: 12px; color: var(--grey-800); }
 .design-doc li { margin-bottom: 6px; }

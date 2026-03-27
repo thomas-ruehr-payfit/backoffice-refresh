@@ -152,7 +152,7 @@ function GlobalNav() {
         ))}
       </div>
       <div style={{ width: expanded ? '144px' : '24px', height: '1px', background: 'var(--grey-200)', margin: '6px 0' }} />
-      <button onClick={() => setExpanded(o => !o)} style={{ width: '36px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', color: 'var(--grey-400)', alignSelf: expanded ? 'flex-end' : 'center', marginRight: expanded ? '2px' : 0 }}>
+      <button onClick={() => setExpanded(o => !o)} style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--grey-100)', border: '1px solid var(--grey-200)', borderRadius: '4px', cursor: 'pointer', fontSize: '15px', lineHeight: 1, color: 'var(--grey-800)', alignSelf: expanded ? 'flex-end' : 'center', marginRight: expanded ? '4px' : 0, marginBottom: '4px' }}>
         {expanded ? '‹' : '›'}
       </button>
     </div>
@@ -317,7 +317,7 @@ function DataDrawer({ open, onToggle }) {
         <button
           onClick={onToggle}
           title={open ? 'Collapse drawer' : 'Expand drawer'}
-          style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: 'var(--grey-400)', fontFamily: 'inherit' }}
+          style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--grey-100)', border: '1px solid var(--grey-200)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', lineHeight: 1, color: 'var(--grey-800)', fontFamily: 'inherit' }}
         >
           {open ? '‹' : '›'}
         </button>

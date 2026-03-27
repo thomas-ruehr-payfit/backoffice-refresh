@@ -7,6 +7,7 @@ import V9 from '../variations/v9/Version'
 import V10 from '../variations/v10/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
 import DesignDoc from './pages/DesignDoc'
+import V1View from './pages/V1View'
 
 const s = {
   app: {
@@ -90,7 +91,7 @@ const s = {
 }
 
 export default function App() {
-  const [view, setView] = useState('design-doc')
+  const [view, setView] = useState('v1')
 
   return (
     <div style={s.app}>
@@ -99,6 +100,9 @@ export default function App() {
       <div style={s.appHeader}>
         <span style={s.appName}>BackOffice Refresh</span>
         <nav style={s.appNav}>
+          <button style={s.appNavBtn(view === 'v1')} onClick={() => setView('v1')}>
+            V1
+          </button>
           <button style={s.appNavBtn(view === 'design-doc')} onClick={() => setView('design-doc')}>
             Design Decisions
           </button>
@@ -146,6 +150,11 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* V1 */}
+      {view === 'v1' && (
+        <V1View />
       )}
 
       {/* Design Decisions */}
