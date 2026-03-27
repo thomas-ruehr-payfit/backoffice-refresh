@@ -51,7 +51,8 @@ input {
 .design-doc { font-size: 16px; }
 .design-doc h1 { font-size: 28px; font-weight: 700; margin-bottom: 32px; color: var(--black); }
 .design-doc h2 { font-size: 20px; font-weight: 600; margin-top: 48px; margin-bottom: 16px; color: var(--black); border-bottom: 1px solid var(--grey-100); padding-bottom: 8px; }
-.design-doc h3 { font-size: 17px; font-weight: 600; margin-top: 32px; margin-bottom: 12px; color: var(--grey-800); }
+.design-doc h3 { font-size: 17px; font-weight: 600; margin-top: 40px; margin-bottom: 12px; color: var(--grey-800); }
+.design-doc h4 { font-size: 15px; font-weight: 600; margin-top: 28px; margin-bottom: 10px; color: var(--grey-600); text-transform: uppercase; letter-spacing: 0.06em; }
 .design-doc p { margin-bottom: 12px; color: var(--grey-800); }
 .design-doc ul, .design-doc ol { padding-left: 20px; margin-bottom: 12px; color: var(--grey-800); }
 .design-doc li { margin-bottom: 6px; }
@@ -60,3 +61,5 @@ input {
 .design-doc code { font-family: var(--font-mono); font-size: 0.875em; background: var(--grey-50); border: 1px solid var(--grey-100); padding: 1px 5px; border-radius: 3px; }
 .design-doc pre { background: var(--grey-50); border: 1px solid var(--grey-100); border-radius: 4px; padding: 16px; overflow-x: auto; margin-bottom: 12px; }
 .design-doc pre code { background: none; border: none; padding: 0; }
+.design-doc blockquote { background: var(--grey-100); border: none; border-radius: 4px; padding: 12px 16px; margin-bottom: 20px; color: var(--grey-800); }
+.design-doc blockquote p { margin-bottom: 0; color: inherit; }

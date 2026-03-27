@@ -27,10 +27,6 @@ const SUB_ITEMS = {
     { id: 'dsn',        label: 'DSN' },
     { id: 'settings',   label: 'Declaration settings' },
   ],
-  people: [
-    { id: 'admins',     label: 'Admins' },
-    { id: 'employees',  label: 'Employees' },
-  ],
   utilities: [
     { id: 'migration', label: 'Environment migration' },
     { id: 'import',    label: 'Bulk import' },
@@ -404,6 +400,15 @@ function ContentArea({ page, sub }) {
     )
   }
 
+  if (page === 'people') {
+    return (
+      <div style={pw}>
+        <Section title={CONTENT_MAP.admins.title} note={CONTENT_MAP.admins.note} height={CONTENT_MAP.admins.height} />
+        <Section title={CONTENT_MAP.employees.title} note={CONTENT_MAP.employees.note} height={CONTENT_MAP.employees.height} />
+      </div>
+    )
+  }
+
   const key = SUB_ITEMS[page] ? sub : page
   const s = CONTENT_MAP[key]
   return s ? (
@@ -415,7 +420,6 @@ function ContentArea({ page, sub }) {
 
 const DEFAULT_SUBS = {
   declaration: 'dashboard',
-  people:      'admins',
   utilities:   'migration',
 }
 
