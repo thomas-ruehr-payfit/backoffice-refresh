@@ -8,6 +8,7 @@ import V10 from '../variations/v10/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
 import DesignDoc from './pages/DesignDoc'
 import V1View from './pages/V1View'
+import Documents from './pages/Documents'
 
 const s = {
   app: {
@@ -112,6 +113,9 @@ export default function App() {
           <button style={s.appNavBtn(view === 'ia')} onClick={() => setView('ia')}>
             Information Architecture
           </button>
+          <button style={s.appNavBtn(view === 'documents')} onClick={() => setView('documents')}>
+            Documents
+          </button>
         </nav>
       </div>
 
@@ -166,6 +170,13 @@ export default function App() {
       {view === 'ia' && (
         <div style={s.iaWrap}>
           <InformationArchitecture />
+        </div>
+      )}
+
+      {/* Documents */}
+      {view === 'documents' && (
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
+          <Documents />
         </div>
       )}
 

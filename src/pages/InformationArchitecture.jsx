@@ -274,6 +274,53 @@ const VARIATIONS = [
   },
 ]
 
+// ── Sitemap data (BO-IA-V1) ───────────────────────────────────────────────────
+
+const SITEMAP_SECTIONS = [
+  {
+    label: 'Declaration',
+    children: [
+      { label: 'Dashboard', children: [{ label: 'Task' }] },
+      { label: 'DSN' },
+      { label: 'Declaration settings', children: [
+        { label: 'Set declaration date' },
+        { label: 'Cancel declaration submission' },
+      ]},
+    ],
+  },
+  {
+    label: 'People',
+    children: [
+      { label: 'Admins' },
+      { label: 'Employees' },
+    ],
+  },
+  {
+    label: 'Files',
+    children: [{ label: 'File' }],
+  },
+  {
+    label: 'Timeline',
+    children: [{ label: 'Event' }],
+  },
+  {
+    label: 'Operations',
+    children: [
+      { label: 'Set onboarding status' },
+      { label: 'Set registration status' },
+      { label: 'Mark as churned' },
+      { label: 'Delete company' },
+    ],
+  },
+  {
+    label: 'Utilities',
+    children: [
+      { label: 'Environment migration' },
+      { label: 'Bulk import' },
+    ],
+  },
+]
+
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const s = {
@@ -436,6 +483,36 @@ const s = {
   legendItem: { display: 'flex', alignItems: 'center', gap: '5px' },
   legendDot: (type) => ({ width: '10px', height: '10px', background: AC[type].secBg, border: `1.5px solid ${AC[type].secBorder}`, flexShrink: 0 }),
   legendLabel: { fontSize: '10px', color: '#6B7280' },
+
+  // Sitemap
+  sitemapCanvas: {
+    display: 'flex', flexDirection: 'column', alignItems: 'center',
+    paddingTop: '48px', paddingBottom: '48px', minWidth: 'max-content',
+  },
+  sitemapRootRow: { display: 'flex', alignItems: 'center', gap: '8px' },
+  sitemapRootArrow: { fontSize: '14px', color: '#9CA3AF' },
+  sitemapNode: (depth) => {
+    const styles = [
+      { background: '#fff', border: '1.5px solid #111827', color: '#111827', fontWeight: 700, fontSize: '13px', padding: '8px 20px' },
+      { background: '#fff', border: '1.5px solid #374151', color: '#111827', fontWeight: 600, fontSize: '12px', padding: '6px 14px' },
+      { background: '#F9FAFB', border: '1px solid #9CA3AF', color: '#374151', fontWeight: 400, fontSize: '11px', padding: '4px 10px' },
+      { background: '#F3F4F6', border: '1px solid #D1D5DB', color: '#6B7280', fontWeight: 400, fontSize: '10px', padding: '3px 8px' },
+    ]
+    return { whiteSpace: 'nowrap', ...styles[Math.min(depth, styles.length - 1)] }
+  },
+  sitemapConnV: { width: '1px', height: '24px', background: '#D1D5DB' },
+  sitemapSectionsRow: { display: 'flex', alignItems: 'flex-start', borderTop: '1px solid #D1D5DB' },
+  sitemapSectionCol: { display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 20px' },
+  sitemapChildrenCol: {
+    display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px',
+    marginTop: '8px', paddingLeft: '10px', borderLeft: '1px solid #E5E7EB',
+    alignSelf: 'flex-start',
+  },
+  sitemapChildRow: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '3px' },
+  sitemapGrandchildrenCol: {
+    display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '3px',
+    marginTop: '3px', marginLeft: '8px', paddingLeft: '10px', borderLeft: '1px solid #E5E7EB',
+  },
 }
 
 // ── Data model components ─────────────────────────────────────────────────────
@@ -530,6 +607,47 @@ const LEGEND_TYPES = [
   { type: 'people',  label: 'People / employees' },
   { type: 'tool',    label: 'Tools (admin-gated)' },
 ]
+
+// ── Sitemap component ─────────────────────────────────────────────────────────
+
+function SitemapView() {
+  return (
+    <div style={s.sitemapCanvas}>
+      <div style={s.sitemapRootRow}>
+        <div style={s.sitemapNode(0)}>Back Office</div>
+        <span style={s.sitemapRootArrow}>→</span>
+        <div style={s.sitemapNode(0)}>Company</div>
+      </div>
+
+      <div style={s.sitemapConnV} />
+
+      <div style={s.sitemapSectionsRow}>
+        {SITEMAP_SECTIONS.map(section => (
+          <div key={section.label} style={s.sitemapSectionCol}>
+            <div style={s.sitemapConnV} />
+            <div style={s.sitemapNode(1)}>{section.label}</div>
+            {section.children && (
+              <div style={s.sitemapChildrenCol}>
+                {section.children.map(child => (
+                  <div key={child.label} style={s.sitemapChildRow}>
+                    <div style={s.sitemapNode(2)}>{child.label}</div>
+                    {child.children && (
+                      <div style={s.sitemapGrandchildrenCol}>
+                        {child.children.map(gc => (
+                          <div key={gc.label} style={s.sitemapNode(3)}>{gc.label}</div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 // ── Left panel helpers ────────────────────────────────────────────────────────
 
@@ -635,6 +753,9 @@ export default function InformationArchitecture() {
           <button style={s.canvasTabBtn(canvasView === 'architecture')} onClick={() => setCanvasView('architecture')}>
             Architecture
           </button>
+          <button style={s.canvasTabBtn(canvasView === 'sitemap')} onClick={() => setCanvasView('sitemap')}>
+            Sitemap
+          </button>
         </div>
 
         {/* Canvas scroll area */}
@@ -646,6 +767,9 @@ export default function InformationArchitecture() {
               {CANVAS_GROUPS.map(g => <GroupBlock key={g.key} group={g} />)}
             </div>
           )}
+
+          {/* Sitemap canvas */}
+          {canvasView === 'sitemap' && <SitemapView />}
 
           {/* Architecture canvas */}
           {canvasView === 'architecture' && (
