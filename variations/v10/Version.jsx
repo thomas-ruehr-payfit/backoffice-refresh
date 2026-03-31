@@ -442,7 +442,7 @@ export default function Version() {
   const subs = SUB_ITEMS[currentPage]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', minHeight: '700px' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', height: '800px', overflowY: 'auto' }}>
 
       <GlobalNav />
 
@@ -457,6 +457,10 @@ export default function Version() {
 
       {/* Center */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* Page title */}
+        <div style={{ padding: '14px 20px', fontSize: '16px', fontWeight: 700, color: 'var(--black)', background: 'var(--white)', flexShrink: 0 }}>
+          {NAV_ITEMS.find(n => n.id === currentPage)?.label}
+        </div>
         {subs && (
           <SubTabBar items={subs} current={activeSub} onChange={setActiveSub} />
         )}

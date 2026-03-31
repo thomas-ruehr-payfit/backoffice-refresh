@@ -400,7 +400,7 @@ export default function Version() {
   const [rightOpen,      setRightOpen]      = useState(true)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', minHeight: '700px' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', height: '800px', overflowY: 'auto' }}>
 
       <GlobalNav />
 
@@ -415,8 +415,14 @@ export default function Version() {
 
       <RightPanel open={rightOpen} onToggle={() => setRightOpen(o => !o)} />
 
-      <div style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
-        <ContentArea page={currentPage} sub={activeSub} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* Page title */}
+        <div style={{ padding: '14px 20px', fontSize: '16px', fontWeight: 700, color: 'var(--black)', background: 'var(--white)', flexShrink: 0 }}>
+          {NAV_ITEMS.find(n => n.id === currentPage)?.label}
+        </div>
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          <ContentArea page={currentPage} sub={activeSub} />
+        </div>
       </div>
 
     </div>

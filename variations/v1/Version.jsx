@@ -76,6 +76,8 @@ const s = {
     display: 'flex',
     flexDirection: 'column',
     background: 'var(--white)',
+    height: '800px',
+    overflowY: 'auto',
   },
 
   // ── Header ──────────────────────────────────────────────────────────────────
@@ -397,6 +399,11 @@ export default function Version({ activePage }) {
             {t.label}
           </button>
         ))}
+      </div>
+
+      {/* Page title */}
+      <div style={{ padding: '14px 20px', fontSize: '16px', fontWeight: 700, color: 'var(--black)', background: 'var(--white)', flexShrink: 0 }}>
+        {TABS.find(t => t.id === currentPage)?.label}
       </div>
 
       {/* Page content */}

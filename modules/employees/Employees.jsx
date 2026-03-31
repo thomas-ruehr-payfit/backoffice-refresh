@@ -114,7 +114,7 @@ function HeadcountChart({ data }) {
 
 // ── Collaborator row ───────────────────────────────────────────────────────────
 
-const COLS = '26px 1fr 1fr 80px 100px 72px 60px 72px 28px'
+const COLS = '26px 1fr 80px 100px 72px 60px 72px 28px'
 
 function CollaboratorRow({ collaborator }) {
   const { firstName, lastName, email, contract, role, startDate, status } = collaborator
@@ -149,15 +149,15 @@ function CollaboratorRow({ collaborator }) {
         {initials}
       </div>
 
-      {/* Name */}
-      <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--black)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-        {firstName} {lastName}
-      </span>
-
-      {/* Email */}
-      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)' }}>
-        {email}
-      </span>
+      {/* Name + email */}
+      <div style={{ overflow: 'hidden' }}>
+        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--black)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {firstName} {lastName}
+        </div>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', fontFamily: 'var(--font-mono)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 2 }}>
+          {email}
+        </div>
+      </div>
 
       {/* Contract */}
       <span style={{
@@ -276,12 +276,12 @@ export default function Employees() {
   const activeCount = COLLABORATORS.filter(e => e.status === 'active').length
 
   return (
-    <div style={{ background: 'var(--white)', border: '1px solid var(--grey-200)' }}>
+    <div style={{ background: 'var(--white)' }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', padding: '12px 20px', borderBottom: '1px solid var(--grey-100)', gap: 12 }}>
         <div style={{ flex: 1 }}>
-          <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--black)' }}>Collaborators</span>
+          <span style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--black)' }}>Collaborators</span>
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', marginLeft: 8 }}>{activeCount} active</span>
         </div>
 
@@ -310,30 +310,34 @@ export default function Employees() {
       {/* Chart */}
       <HeadcountChart data={HEADCOUNT_DATA} />
 
-      {/* Table header */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: COLS,
-        gap: '0 12px',
-        padding: '6px 20px',
-        borderBottom: '1px solid var(--grey-200)',
-        background: 'var(--grey-50)',
-      }}>
-        {['', 'Name', 'Email', 'Contract', 'Role', 'Since', 'Status', '', ''].map((col, i) => (
-          <span key={i} style={{ fontSize: 10, fontWeight: 600, color: 'var(--grey-400)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            {col}
-          </span>
-        ))}
-      </div>
+      <div style={{ border: '1px solid var(--grey-200)' }}>
 
-      {/* Rows */}
-      {filtered.map(e => <CollaboratorRow key={e.id} collaborator={e} />)}
-
-      {filtered.length === 0 && (
-        <div style={{ padding: '24px 20px', textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--grey-400)' }}>
-          No collaborators match the current filter.
+        {/* Table header */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: COLS,
+          gap: '0 12px',
+          padding: '6px 20px',
+          borderBottom: '1px solid var(--grey-200)',
+          background: 'var(--grey-50)',
+        }}>
+          {['', 'Name', 'Contract', 'Role', 'Since', 'Status', '', ''].map((col, i) => (
+            <span key={i} style={{ fontSize: 10, fontWeight: 600, color: 'var(--grey-400)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              {col}
+            </span>
+          ))}
         </div>
-      )}
+
+        {/* Rows */}
+        {filtered.map(e => <CollaboratorRow key={e.id} collaborator={e} />)}
+
+        {filtered.length === 0 && (
+          <div style={{ padding: '24px 20px', textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--grey-400)' }}>
+            No collaborators match the current filter.
+          </div>
+        )}
+
+      </div>
 
     </div>
   )

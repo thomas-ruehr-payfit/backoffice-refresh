@@ -442,7 +442,7 @@ export default function Version() {
   const [activeTool,     setActiveTool]     = useState('migration')
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', minHeight: '700px' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', height: '800px', overflowY: 'auto' }}>
 
       {/* Back Office level — expandable global nav */}
       <GlobalNav />
@@ -453,6 +453,11 @@ export default function Version() {
       {/* Content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <TabBar current={currentPage} onChange={setCurrentPage} />
+
+        {/* Page title */}
+        <div style={{ padding: '14px 20px', fontSize: '16px', fontWeight: 700, color: 'var(--black)', background: 'var(--white)', flexShrink: 0 }}>
+          {ALL_TABS.find(t => t.id === currentPage)?.label}
+        </div>
 
         {currentPage === 'declarations' && (
           <SubTabBar items={DECLARATION_SECTIONS} current={activeSection} onChange={setActiveSection} />

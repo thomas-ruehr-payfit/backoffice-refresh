@@ -32,7 +32,12 @@
       "Bash(echo \"=== v$i ===\")",
       "Read(//Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/v$i/**)",
       "Bash(done)",
-      "Bash(pkill -f vite)"
+      "Bash(pkill -f vite)",
+      "Bash(claude mcp:*)",
+      "Skill(update-config)",
+      "mcp__figma__generate_diagram",
+      "Bash(for v:*)",
+      "Bash(do echo:*)"
     ]
   }
 }

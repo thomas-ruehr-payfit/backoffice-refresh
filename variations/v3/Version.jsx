@@ -620,7 +620,7 @@ export default function Version() {
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', height: '800px', overflowY: 'auto' }}>
 
       {/* ── Back Office level — global nav, full height ── */}
       <GlobalNav />
@@ -640,6 +640,11 @@ export default function Version() {
           {/* Tab content area */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
             <TabBar current={currentPage} onChange={setCurrentPage} />
+
+            {/* Page title */}
+            <div style={{ padding: '14px 20px', fontSize: '16px', fontWeight: 700, color: 'var(--black)', background: 'var(--white)', flexShrink: 0 }}>
+              {ALL_TABS.find(t => t.id === currentPage)?.label}
+            </div>
 
             {currentPage === 'declarations' && <DeclarationsPage />}
             {currentPage === 'people'       && <PeoplePage />}
