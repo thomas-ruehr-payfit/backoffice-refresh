@@ -1,6 +1,16 @@
 // V9 — Based on V8: left company panel + first-level nav | center with second-level sub-tabs | collapsible right metadata panel
 
 import { useState } from 'react'
+import Admins from '../../modules/admins/Admins'
+import Employees from '../../modules/employees/Employees'
+import PendingActions from '../../modules/pending-actions/PendingActions'
+import Declarations from '../../modules/declarations/Declarations'
+import Configuration from '../../modules/configuration/Configuration'
+import FilesArchive from '../../modules/files/FilesArchive'
+import Timeline from '../../modules/timeline/Timeline'
+import EnvironmentMigration from '../../modules/environment-migration/EnvironmentMigration'
+import OperationsImport from '../../modules/operations-import/OperationsImport'
+import CustomerPanel from '../../modules/customer-panel/CustomerPanel'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -289,14 +299,14 @@ function Section({ title, note, height = 160 }) {
 const pw = { padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }
 
 const CONTENT_MAP = {
-  pending:       { title: 'Pending actions',       note: 'To-do for this company — declarations to generate, validate, or send',              height: 200 },
-  declarations:  { title: 'Declarations',          note: 'Grouped declaration documents — DSN / Déclarations / Scheduled — status by period', height: 280 },
-  configuration: { title: 'Configuration',         note: 'Declaration-level settings — blocking rules, submission restrictions',               height: 120 },
-  documents:     { title: 'Files archive',         note: 'Filterable by type, period, and date — downloadable documents',                     height: 480 },
-  activity:      { title: 'Timeline',              note: 'Chronological event log — filterable by type: declarations, config changes, access events', height: 600 },
-  migration:     { title: 'Environment migration', note: 'Copy company to staging or production environment',                                  height: 200 },
-  import:        { title: 'Operations import',     note: 'Bulk operations file upload',                                                        height: 200 },
-  customer:      { title: 'Customer panel',        note: 'Near-deprecated — still active for Spain. Grouped here pending full deprecation.',   height: 200 },
+  pending:       <PendingActions />,
+  declarations:  <Declarations />,
+  configuration: <Configuration />,
+  documents:     <FilesArchive />,
+  activity:      <Timeline />,
+  migration:     <EnvironmentMigration />,
+  import:        <OperationsImport />,
+  customer:      <CustomerPanel />,
 }
 
 function ContentArea({ page, sub }) {
@@ -305,15 +315,15 @@ function ContentArea({ page, sub }) {
   if (page === 'people') {
     return (
       <div style={pw}>
-        <Section title="Admin access"  note="Current admins — temporary connect access — add / remove" height={160} />
-        <Section title="Employee list" note="Headcount chart + table — employee status — onboarding and contract management" height={360} />
+        <Admins />
+        <Employees />
       </div>
     )
   }
 
-  const s = CONTENT_MAP[key]
-  return s ? (
-    <div style={pw}><Section title={s.title} note={s.note} height={s.height} /></div>
+  const content = CONTENT_MAP[key]
+  return content ? (
+    <div style={pw}>{content}</div>
   ) : null
 }
 

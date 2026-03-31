@@ -7,6 +7,16 @@
 //   - Layout: GlobalNav | LeftCompanyPanel | TabBar + Content
 
 import { useState } from 'react'
+import Admins from '../../modules/admins/Admins'
+import Employees from '../../modules/employees/Employees'
+import PendingActions from '../../modules/pending-actions/PendingActions'
+import Declarations from '../../modules/declarations/Declarations'
+import Configuration from '../../modules/configuration/Configuration'
+import FilesArchive from '../../modules/files/FilesArchive'
+import Timeline from '../../modules/timeline/Timeline'
+import EnvironmentMigration from '../../modules/environment-migration/EnvironmentMigration'
+import OperationsImport from '../../modules/operations-import/OperationsImport'
+import CustomerPanel from '../../modules/customer-panel/CustomerPanel'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -350,11 +360,16 @@ const DECLARATION_SECTIONS = [
   { id: 'configuration', label: 'Configuration',   note: 'Declaration-level settings — blocking rules, submission restrictions',              height: 120 },
 ]
 
+const DECLARATION_MODULES = {
+  pending:       <PendingActions />,
+  declarations:  <Declarations />,
+  configuration: <Configuration />,
+}
+
 function DeclarationsPage({ activeSection }) {
-  const section = DECLARATION_SECTIONS.find(s => s.id === activeSection)
   return (
     <div style={{ ...pw, flex: 1 }}>
-      <Section title={section.label} note={section.note} height={section.height} />
+      {DECLARATION_MODULES[activeSection]}
     </div>
   )
 }
@@ -362,18 +377,18 @@ function DeclarationsPage({ activeSection }) {
 function PeoplePage() {
   return (
     <div style={pw}>
-      <Section title="Admin access"    note="Current admins — temporary connect access — add / remove" height={160} />
-      <Section title="Employee list"   note="Headcount chart + table — employee status — onboarding and contract management" height={360} />
+      <Admins />
+      <Employees />
     </div>
   )
 }
 
 function DocumentsPage() {
-  return <div style={pw}><Section title="Files archive" note="Filterable by type, period, and date — downloadable documents" height={480} /></div>
+  return <div style={pw}><FilesArchive /></div>
 }
 
 function ActivityPage() {
-  return <div style={pw}><Section title="Timeline" note="Chronological event log — filterable by type: declarations, config changes, access events" height={600} /></div>
+  return <div style={pw}><Timeline /></div>
 }
 
 const UTILS_TOOLS = [
@@ -382,11 +397,16 @@ const UTILS_TOOLS = [
   { id: 'customer',  label: 'Customer panel',        note: 'Near-deprecated — still active for Spain. Grouped here pending full deprecation.' },
 ]
 
+const UTILS_MODULES = {
+  migration: <EnvironmentMigration />,
+  import:    <OperationsImport />,
+  customer:  <CustomerPanel />,
+}
+
 function UtilsPage({ activeTool }) {
-  const tool = UTILS_TOOLS.find(t => t.id === activeTool)
   return (
     <div style={{ ...pw, flex: 1 }}>
-      <Section title={tool.label} note={tool.note} height={200} />
+      {UTILS_MODULES[activeTool]}
     </div>
   )
 }

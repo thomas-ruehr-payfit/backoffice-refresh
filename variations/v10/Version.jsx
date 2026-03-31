@@ -1,6 +1,16 @@
 // V10 — BO-IA-V1 sitemap · V9 nav scheme (first-level left, second-level center sub-tabs) · V8 collapsible data drawer (between left and center)
 
 import { useState } from 'react'
+import Admins from '../../modules/admins/Admins'
+import Employees from '../../modules/employees/Employees'
+import FilesArchive from '../../modules/files/FilesArchive'
+import Timeline from '../../modules/timeline/Timeline'
+import Onboarding from '../../modules/onboarding/Onboarding'
+import Registration from '../../modules/registration/Registration'
+import Churned from '../../modules/churned/Churned'
+import Delete from '../../modules/delete/Delete'
+import EnvironmentMigration from '../../modules/environment-migration/EnvironmentMigration'
+import OperationsImport from '../../modules/operations-import/OperationsImport'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -370,32 +380,25 @@ function Section({ title, note, height = 160 }) {
 
 const pw = { padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }
 
+// dashboard, dsn, settings are not yet extracted to modules
 const CONTENT_MAP = {
-  dashboard:    { title: 'Dashboard',              note: 'Pending tasks — declarations to generate, validate, or send',                      height: 200 },
-  dsn:          { title: 'DSN',                    note: 'DSN documents — status by period — read only',                                     height: 280 },
-  settings:     { title: 'Declaration settings',   note: 'Set declaration date · Cancel declaration submission',                             height: 140 },
-  admins:       { title: 'Admins',                 note: 'Current admins — temporary connect access — add / remove',                         height: 160 },
-  employees:    { title: 'Employees',              note: 'Headcount chart + table — employee status — onboarding and contract management',   height: 360 },
-  files:        { title: 'Files',                  note: 'Filterable by type, period, and date — downloadable documents',                    height: 480 },
-  timeline:     { title: 'Timeline',               note: 'Chronological event log — filterable by type: declarations, config changes, access events', height: 600 },
-  onboarding:   { title: 'Set onboarding status',  note: 'Update the onboarding status for this company',                                   height: 160 },
-  registration: { title: 'Set registration status', note: 'Update the registration status for this company',                                height: 160 },
-  churned:      { title: 'Mark as churned',        note: 'Mark this company as churned — irreversible action',                              height: 160 },
-  delete:       { title: 'Delete company',         note: 'Permanently delete this company — irreversible action',                           height: 160 },
-  migration:    { title: 'Environment migration',  note: 'Copy company to staging or production environment',                               height: 200 },
-  import:       { title: 'Bulk import',            note: 'Bulk operations file upload',                                                     height: 200 },
+  dashboard:    { title: 'Dashboard',            note: 'Pending tasks — declarations to generate, validate, or send',     height: 200 },
+  dsn:          { title: 'DSN',                  note: 'DSN documents — status by period — read only',                    height: 280 },
+  settings:     { title: 'Declaration settings', note: 'Set declaration date · Cancel declaration submission',            height: 140 },
+  files:        <FilesArchive />,
+  timeline:     <Timeline />,
+  migration:    <EnvironmentMigration />,
+  import:       <OperationsImport />,
 }
-
-const OPERATIONS_SECTIONS = ['onboarding', 'registration', 'churned', 'delete']
 
 function ContentArea({ page, sub }) {
   if (page === 'operations') {
     return (
       <div style={pw}>
-        {OPERATIONS_SECTIONS.map(key => {
-          const s = CONTENT_MAP[key]
-          return <Section key={key} title={s.title} note={s.note} height={s.height} />
-        })}
+        <Onboarding />
+        <Registration />
+        <Churned />
+        <Delete />
       </div>
     )
   }
@@ -403,17 +406,19 @@ function ContentArea({ page, sub }) {
   if (page === 'people') {
     return (
       <div style={pw}>
-        <Section title={CONTENT_MAP.admins.title} note={CONTENT_MAP.admins.note} height={CONTENT_MAP.admins.height} />
-        <Section title={CONTENT_MAP.employees.title} note={CONTENT_MAP.employees.note} height={CONTENT_MAP.employees.height} />
+        <Admins />
+        <Employees />
       </div>
     )
   }
 
   const key = SUB_ITEMS[page] ? sub : page
-  const s = CONTENT_MAP[key]
-  return s ? (
-    <div style={pw}><Section title={s.title} note={s.note} height={s.height} /></div>
-  ) : null
+  const entry = CONTENT_MAP[key]
+  if (!entry) return null
+  if (typeof entry === 'object' && entry.title) {
+    return <div style={pw}><Section title={entry.title} note={entry.note} height={entry.height} /></div>
+  }
+  return <div style={pw}>{entry}</div>
 }
 
 // ── Version shell ─────────────────────────────────────────────────────────────

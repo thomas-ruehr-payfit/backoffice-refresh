@@ -5,6 +5,11 @@
 // Main content area has 3 workflow tabs. Activity is a regular tab pushed to the far right.
 
 import { useState } from 'react'
+import Admins from '../../modules/admins/Admins'
+import Employees from '../../modules/employees/Employees'
+import Declarations from '../../modules/declarations/Declarations'
+import FilesArchive from '../../modules/files/FilesArchive'
+import Timeline from '../../modules/timeline/Timeline'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -588,46 +593,24 @@ function Section({ title, note, height = 160 }) {
 const pageWrap = { padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }
 
 function DeclarationsPage() {
-  return (
-    <div style={pageWrap}>
-      <Section title="Declarations list"
-        note="Status per period — generated / validated / sent — generation triggers"
-        height={480} />
-    </div>
-  )
+  return <div style={pageWrap}><Declarations /></div>
 }
 
 function PeoplePage() {
   return (
     <div style={pageWrap}>
-      <Section title="Admin access"
-        note="Current admins — temporary connect access — add / remove"
-        height={160} />
-      <Section title="Employee list"
-        note="Headcount chart + table — employee status — onboarding and contract management"
-        height={360} />
+      <Admins />
+      <Employees />
     </div>
   )
 }
 
 function DocumentsPage() {
-  return (
-    <div style={pageWrap}>
-      <Section title="Files archive"
-        note="Filterable by type, period, and date — downloadable documents"
-        height={480} />
-    </div>
-  )
+  return <div style={pageWrap}><FilesArchive /></div>
 }
 
 function ActivityPage() {
-  return (
-    <div style={pageWrap}>
-      <Section title="Timeline"
-        note="Chronological event log — filterable by type: declarations, config changes, access events"
-        height={600} />
-    </div>
-  )
+  return <div style={pageWrap}><Timeline /></div>
 }
 
 // ── Version shell ─────────────────────────────────────────────────────────────
