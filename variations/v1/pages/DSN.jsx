@@ -1,16 +1,5 @@
-const s = {
-  page: { padding: '24px' },
-  placeholder: {
-    background: 'var(--grey-100)',
-    border: '1px dashed var(--grey-200)',
-    height: '160px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'var(--grey-400)',
-    fontSize: 'var(--text-sm)',
-  },
-}
+import Dsn from '../../../modules/dsn/Dsn'
+
 export default function DSN() {
-  return <div style={s.page}><div style={s.placeholder}>DSN — placeholder</div></div>
+  return <Dsn />
 }
