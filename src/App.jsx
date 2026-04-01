@@ -116,6 +116,9 @@ export default function App() {
           <button style={s.appNavBtn(view === 'documents')} onClick={() => setView('documents')}>
             Documents
           </button>
+          <button style={s.appNavBtn(view === 'testing')} onClick={() => setView('testing')}>
+            Testing
+          </button>
         </nav>
       </div>
 
@@ -177,6 +180,13 @@ export default function App() {
       {view === 'documents' && (
         <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
           <Documents />
+        </div>
+      )}
+
+      {/* Testing */}
+      {view === 'testing' && (
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
+          <V10 />
         </div>
       )}
 

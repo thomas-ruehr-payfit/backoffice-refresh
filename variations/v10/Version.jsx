@@ -1,6 +1,8 @@
 // V10 — BO-IA-V1 sitemap · V9 nav scheme (first-level left, second-level center sub-tabs) · V8 collapsible data drawer (between left and center)
 
 import { useState } from 'react'
+import Dashboard from '../../modules/dashboard/Dashboard'
+import Dsn from '../../modules/dsn/Dsn'
 import Admins from '../../modules/admins/Admins'
 import Employees from '../../modules/employees/Employees'
 import FilesArchive from '../../modules/files/FilesArchive'
@@ -11,6 +13,7 @@ import Churned from '../../modules/churned/Churned'
 import Delete from '../../modules/delete/Delete'
 import EnvironmentMigration from '../../modules/environment-migration/EnvironmentMigration'
 import OperationsImport from '../../modules/operations-import/OperationsImport'
+import DeclarationSettings from '../../modules/declaration-settings/DeclarationSettings'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -380,11 +383,10 @@ function Section({ title, note, height = 160 }) {
 
 const pw = { padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }
 
-// dashboard, dsn, settings are not yet extracted to modules
 const CONTENT_MAP = {
-  dashboard:    { title: 'Dashboard',            note: 'Pending tasks — declarations to generate, validate, or send',     height: 200 },
-  dsn:          { title: 'DSN',                  note: 'DSN documents — status by period — read only',                    height: 280 },
-  settings:     { title: 'Declaration settings', note: 'Set declaration date · Cancel declaration submission',            height: 140 },
+  dashboard:    <Dashboard />,
+  dsn:          <Dsn />,
+  settings:     <DeclarationSettings />,
   files:        <FilesArchive />,
   timeline:     <Timeline />,
   migration:    <EnvironmentMigration />,
@@ -442,7 +444,7 @@ export default function Version() {
   const subs = SUB_ITEMS[currentPage]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', height: '800px', overflowY: 'auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', background: 'var(--white)', flex: 1, minHeight: 0 }}>
 
       <GlobalNav />
 

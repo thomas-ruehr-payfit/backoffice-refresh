@@ -1,11 +1,5 @@
-import Section from '../../shared/Section'
+import DeclarationSettings from '../declaration-settings/DeclarationSettings'
 
 export default function Configuration() {
-  return (
-    <Section
-      title="Configuration"
-      note="Declaration-level settings — blocking rules, submission restrictions"
-      height={120}
-    />
-  )
+  return <DeclarationSettings />
 }
