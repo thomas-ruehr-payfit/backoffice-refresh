@@ -279,8 +279,8 @@ function LeftPanel({ currentCompany, onCompanyChange, currentPage, onPageChange 
 
       {/* Connect — pinned bottom */}
       <div style={{ padding: '10px 14px', borderTop: '1px solid var(--grey-200)', flexShrink: 0 }}>
-        <button style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '6px 0', background: 'none', border: '1px solid var(--grey-200)', cursor: 'pointer', color: 'var(--grey-500)', fontSize: 'var(--text-xs)', fontFamily: 'inherit', fontWeight: 500 }}>
-          <span style={{ fontSize: '13px' }}>⇢</span> Connect
+        <button style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '6px 0', background: 'var(--grey-800)', border: '1px solid var(--grey-800)', cursor: 'pointer', color: 'var(--white)', fontSize: 'var(--text-xs)', fontFamily: 'inherit', fontWeight: 500 }}>
+          <span style={{ fontSize: '13px' }}>⇢</span> Log In
         </button>
       </div>
 

@@ -94,7 +94,7 @@ function LeftCompanyPanel({ current, onChange }) {
         </div>
 
         {/* Connect icon button */}
-        <button title="Connect" style={{ flexShrink: 0, marginTop: '2px', width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'none', border: '1px solid var(--grey-200)', cursor: 'pointer', color: 'var(--grey-500)', fontSize: '13px' }}>
+        <button title="Log In" style={{ flexShrink: 0, marginTop: '2px', width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--grey-800)', border: '1px solid var(--grey-800)', cursor: 'pointer', color: 'var(--white)', fontSize: '13px' }}>
           ⇢
         </button>
 

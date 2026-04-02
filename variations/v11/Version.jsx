@@ -239,8 +239,8 @@ function CompanyTopBar({ currentCompany, onCompanyChange }) {
 
       {/* Connect — pinned right */}
       <div style={{ marginLeft: 'auto', padding: '0 16px', flexShrink: 0 }}>
-        <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', background: 'none', border: '1px solid var(--grey-200)', cursor: 'pointer', color: 'var(--grey-500)', fontSize: 'var(--text-xs)', fontFamily: 'inherit', fontWeight: 500, whiteSpace: 'nowrap' }}>
-          <span style={{ fontSize: 13 }}>⇢</span> Connect
+        <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', background: 'var(--grey-800)', border: '1px solid var(--grey-800)', cursor: 'pointer', color: 'var(--white)', fontSize: 'var(--text-xs)', fontFamily: 'inherit', fontWeight: 500, whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: 13 }}>⇢</span> Log In
         </button>
       </div>
 

@@ -296,9 +296,9 @@ const hb = {
     padding: '4px 12px',
     fontSize: 'var(--text-xs)',
     fontWeight: 600,
-    color: 'var(--grey-700)',
-    background: 'var(--white)',
-    border: '1px solid var(--grey-200)',
+    color: 'var(--white)',
+    background: 'var(--grey-800)',
+    border: '1px solid var(--grey-800)',
     cursor: 'pointer',
     fontFamily: 'inherit',
   },
@@ -322,7 +322,7 @@ function HeaderBar({ current, onChange }) {
 
       <div style={hb.actions}>
         <ToolsMenu />
-        <button style={hb.connectBtn}>Connect</button>
+        <button style={hb.connectBtn}>Log In</button>
       </div>
     </div>
   )
