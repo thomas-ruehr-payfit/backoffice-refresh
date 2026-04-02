@@ -174,63 +174,55 @@ function GlobalNav() {
 
 // ── Company top bar ───────────────────────────────────────────────────────────
 
-function CompanyTopBar({ currentCompany, onCompanyChange, currentPage, onPageChange }) {
+function CompanyTopBar({ currentCompany, onCompanyChange }) {
   const [switcherOpen, setSwitcherOpen] = useState(false)
   const company = COMPANIES.find(c => c.name === currentCompany) || COMPANIES[0]
 
-  const primaryNav  = NAV_ITEMS.filter(n => n.primary)
-  const secondaryNav = NAV_ITEMS.filter(n => !n.primary)
-
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 0, borderBottom: '1px solid var(--grey-200)', background: 'var(--white)', flexShrink: 0, position: 'relative', minHeight: 48 }}>
+    <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--grey-200)', background: 'var(--white)', flexShrink: 0, position: 'relative', minHeight: 56 }}>
 
-      {/* Identity */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 16px', borderRight: '1px solid var(--grey-200)', alignSelf: 'stretch' }}>
+      {/* Identity — vertical stack like V10 left panel */}
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 3, padding: '10px 16px', borderRight: '1px solid var(--grey-200)', alignSelf: 'stretch', position: 'relative' }}>
 
         {/* Org + switcher */}
-        <div style={{ position: 'relative' }}>
-          <button
-            onClick={() => setSwitcherOpen(o => !o)}
-            style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
-          >
-            <span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--grey-400)' }}>{ORG}</span>
-            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--grey-500)', background: 'var(--grey-100)', padding: '0 5px', borderRadius: 2 }}>{COMPANIES.length}</span>
-            <span style={{ fontSize: 9, color: 'var(--grey-300)' }}>▾</span>
-          </button>
-
-          {switcherOpen && (
-            <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 300, background: 'var(--white)', border: '1px solid var(--grey-200)', minWidth: 200, marginTop: 4, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
-              {COMPANIES.map(c => (
-                <div
-                  key={c.name}
-                  onClick={() => { onCompanyChange(c.name); setSwitcherOpen(false) }}
-                  style={{ padding: '8px 14px', cursor: 'pointer', background: c.name === currentCompany ? '#EBF0FF' : 'var(--white)', borderBottom: '1px solid var(--grey-100)', display: 'flex', flexDirection: 'column', gap: 3 }}
-                >
-                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: c.name === currentCompany ? 'var(--accent)' : 'var(--black)' }}>{c.name}</span>
-                  <SiretDisplay siret={c.siret} />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Divider */}
-        <div style={{ width: 1, height: 16, background: 'var(--grey-200)', flexShrink: 0 }} />
+        <button
+          onClick={() => setSwitcherOpen(o => !o)}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}
+        >
+          <span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--grey-400)' }}>{ORG}</span>
+          <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--grey-500)', background: 'var(--grey-100)', padding: '0 5px', borderRadius: 2 }}>{COMPANIES.length}</span>
+          <span style={{ fontSize: 9, color: 'var(--grey-300)' }}>▾</span>
+        </button>
 
         {/* Company name */}
-        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--black)', whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--black)', whiteSpace: 'nowrap', lineHeight: 1 }}>
           {currentCompany}
         </span>
 
         {/* Country + SIRET */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--grey-600)', background: 'var(--grey-100)', padding: '1px 5px', letterSpacing: '0.04em' }}>{COUNTRY}</span>
           <SiretDisplay siret={company.siret} />
         </div>
+
+        {switcherOpen && (
+          <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 300, background: 'var(--white)', border: '1px solid var(--grey-200)', minWidth: 200, marginTop: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
+            {COMPANIES.map(c => (
+              <div
+                key={c.name}
+                onClick={() => { onCompanyChange(c.name); setSwitcherOpen(false) }}
+                style={{ padding: '8px 14px', cursor: 'pointer', background: c.name === currentCompany ? '#EBF0FF' : 'var(--white)', borderBottom: '1px solid var(--grey-100)', display: 'flex', flexDirection: 'column', gap: 3 }}
+              >
+                <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: c.name === currentCompany ? 'var(--accent)' : 'var(--black)' }}>{c.name}</span>
+                <SiretDisplay siret={c.siret} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Status chips */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '0 14px', borderRight: '1px solid var(--grey-200)', alignSelf: 'stretch', flexWrap: 'nowrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '0 14px', flexWrap: 'nowrap' }}>
         {STATUS_CHIPS.map(({ label, value, accent, dim }) => (
           <span key={label} style={{
             fontSize: 'var(--text-xs)', fontWeight: accent ? 700 : 500,
@@ -245,60 +237,6 @@ function CompanyTopBar({ currentCompany, onCompanyChange, currentPage, onPageCha
         ))}
       </div>
 
-      {/* Primary nav */}
-      <div style={{ display: 'flex', alignItems: 'stretch', alignSelf: 'stretch', borderRight: '1px solid var(--grey-200)' }}>
-        {primaryNav.map(item => {
-          const isActive = currentPage === item.id
-          return (
-            <button
-              key={item.id}
-              onClick={() => onPageChange(item.id)}
-              style={{
-                padding: '0 16px',
-                fontSize: 'var(--text-sm)',
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? 'var(--black)' : 'var(--grey-500)',
-                background: 'none',
-                border: 'none',
-                borderBottom: isActive ? '2px solid var(--black)' : '2px solid transparent',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {item.label}
-            </button>
-          )
-        })}
-      </div>
-
-      {/* Secondary nav */}
-      <div style={{ display: 'flex', alignItems: 'stretch', alignSelf: 'stretch' }}>
-        {secondaryNav.map(item => {
-          const isActive = currentPage === item.id
-          return (
-            <button
-              key={item.id}
-              onClick={() => onPageChange(item.id)}
-              style={{
-                padding: '0 14px',
-                fontSize: 'var(--text-xs)',
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? 'var(--grey-700)' : 'var(--grey-400)',
-                background: 'none',
-                border: 'none',
-                borderBottom: isActive ? '2px solid var(--grey-400)' : '2px solid transparent',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {item.label}
-            </button>
-          )
-        })}
-      </div>
-
       {/* Connect — pinned right */}
       <div style={{ marginLeft: 'auto', padding: '0 16px', flexShrink: 0 }}>
         <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', background: 'none', border: '1px solid var(--grey-200)', cursor: 'pointer', color: 'var(--grey-500)', fontSize: 'var(--text-xs)', fontFamily: 'inherit', fontWeight: 500, whiteSpace: 'nowrap' }}>
@@ -306,6 +244,51 @@ function CompanyTopBar({ currentCompany, onCompanyChange, currentPage, onPageCha
         </button>
       </div>
 
+    </div>
+  )
+}
+
+// ── First-level nav bar ───────────────────────────────────────────────────────
+
+function FirstLevelNav({ currentPage, onPageChange }) {
+  const primaryNav   = NAV_ITEMS.filter(n => n.primary)
+  const secondaryNav = NAV_ITEMS.filter(n => !n.primary)
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'stretch', borderBottom: '1px solid var(--grey-200)', background: 'var(--white)', flexShrink: 0 }}>
+      {primaryNav.map(item => {
+        const isActive = currentPage === item.id
+        return (
+          <button key={item.id} onClick={() => onPageChange(item.id)} style={{
+            padding: '0 18px', height: 40,
+            fontSize: 'var(--text-sm)', fontWeight: isActive ? 600 : 400,
+            color: isActive ? 'var(--black)' : 'var(--grey-500)',
+            background: 'none', border: 'none',
+            borderBottom: isActive ? '2px solid var(--black)' : '2px solid transparent',
+            cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap',
+          }}>
+            {item.label}
+          </button>
+        )
+      })}
+
+      <div style={{ width: 1, height: 20, background: 'var(--grey-200)', alignSelf: 'center', margin: '0 4px' }} />
+
+      {secondaryNav.map(item => {
+        const isActive = currentPage === item.id
+        return (
+          <button key={item.id} onClick={() => onPageChange(item.id)} style={{
+            padding: '0 14px', height: 40,
+            fontSize: 'var(--text-xs)', fontWeight: isActive ? 600 : 400,
+            color: isActive ? 'var(--grey-700)' : 'var(--grey-400)',
+            background: 'none', border: 'none',
+            borderBottom: isActive ? '2px solid var(--grey-400)' : '2px solid transparent',
+            cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap',
+          }}>
+            {item.label}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -460,8 +443,6 @@ export default function Version() {
         <CompanyTopBar
           currentCompany={currentCompany}
           onCompanyChange={setCurrentCompany}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
         />
 
         {/* Below top bar: drawer + center */}
@@ -471,6 +452,7 @@ export default function Version() {
 
           {/* Center */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+            <FirstLevelNav currentPage={currentPage} onPageChange={handlePageChange} />
             {subs && (
               <SubTabBar items={subs} current={activeSub} onChange={setActiveSub} />
             )}
