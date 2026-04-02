@@ -23,6 +23,7 @@ const COMPANIES = [
 ]
 
 const NAV_ITEMS = [
+  { id: 'people',    label: 'People' },
   {
     id: 'declarations', label: 'Declarations',
     children: [
@@ -31,7 +32,6 @@ const NAV_ITEMS = [
       { id: 'configuration', label: 'Configuration' },
     ],
   },
-  { id: 'people',    label: 'People' },
   { id: 'documents', label: 'Documents' },
   { id: 'activity',  label: 'Activity' },
   {
@@ -394,7 +394,7 @@ function ContentArea({ page, sub }) {
 // ── Version shell ─────────────────────────────────────────────────────────────
 
 export default function Version() {
-  const [currentPage,    setCurrentPage]    = useState('declarations')
+  const [currentPage,    setCurrentPage]    = useState('people')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
   const [activeSub,      setActiveSub]      = useState('pending')
   const [rightOpen,      setRightOpen]      = useState(true)

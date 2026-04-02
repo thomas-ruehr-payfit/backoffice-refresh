@@ -162,8 +162,8 @@ function GlobalNav() {
 // ── Left panel — company header + status chips + first-level nav ──────────────
 
 const NAV_ITEMS = [
-  { id: 'declarations', label: 'Declarations' },
   { id: 'people',       label: 'People' },
+  { id: 'declarations', label: 'Declarations' },
   { id: 'documents',    label: 'Documents' },
   { id: 'activity',     label: 'Activity' },
   { id: 'utils',        label: 'Utils' },
@@ -390,7 +390,7 @@ function RightPanel({ open, onToggle }) {
 // ── Version shell ─────────────────────────────────────────────────────────────
 
 export default function Version() {
-  const [currentPage,    setCurrentPage]    = useState('declarations')
+  const [currentPage,    setCurrentPage]    = useState('people')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
   const [activeSub,      setActiveSub]      = useState('pending')
   const [activeTool,     setActiveTool]     = useState('migration')

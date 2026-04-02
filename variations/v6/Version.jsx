@@ -28,10 +28,10 @@ const COMPANIES = [
   { name: 'Smiles Technologies', siret: '45785745600089' },
 ]
 
-const MAIN_TABS = ['declarations', 'people', 'documents']
+const MAIN_TABS = ['people', 'declarations', 'documents']
 const ALL_TABS = [
-  { id: 'declarations', label: 'Declarations' },
   { id: 'people',       label: 'People' },
+  { id: 'declarations', label: 'Declarations' },
   { id: 'documents',    label: 'Documents' },
   { id: 'activity',     label: 'Activity' },
   { id: 'utils',        label: 'Utils' },
@@ -436,7 +436,7 @@ function SubTabBar({ items, current, onChange }) {
 // ── Version shell ─────────────────────────────────────────────────────────────
 
 export default function Version() {
-  const [currentPage,    setCurrentPage]    = useState('declarations')
+  const [currentPage,    setCurrentPage]    = useState('people')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
   const [activeSection,  setActiveSection]  = useState('pending')
   const [activeTool,     setActiveTool]     = useState('migration')

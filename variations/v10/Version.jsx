@@ -26,8 +26,8 @@ const COMPANIES = [
 ]
 
 const NAV_ITEMS = [
-  { id: 'declaration', label: 'Declaration', primary: true  },
   { id: 'people',      label: 'People',      primary: true  },
+  { id: 'declaration', label: 'Declaration', primary: true  },
   { id: 'files',       label: 'Files',       primary: true  },
   { id: 'timeline',    label: 'Timeline',    primary: false },
   { id: 'operations',  label: 'Operations',  primary: false },
@@ -431,7 +431,7 @@ const DEFAULT_SUBS = {
 }
 
 export default function Version() {
-  const [currentPage,    setCurrentPage]    = useState('declaration')
+  const [currentPage,    setCurrentPage]    = useState('people')
   const [currentCompany, setCurrentCompany] = useState('Smiles.Inc')
   const [activeSub,      setActiveSub]      = useState('dashboard')
   const [drawerOpen,     setDrawerOpen]     = useState(true)
