@@ -325,8 +325,9 @@ function DataDrawer({ open, onToggle }) {
   return (
     <div style={{ flexShrink: 0, borderRight: '1px solid var(--grey-200)', display: 'flex', flexDirection: 'column', background: 'var(--white)', width: open ? '240px' : '32px', transition: 'width 0.15s ease', overflow: 'hidden' }}>
 
-      {/* Toggle */}
-      <div style={{ flexShrink: 0, display: 'flex', justifyContent: open ? 'flex-end' : 'center', padding: open ? '6px 8px' : '6px 0' }}>
+      {/* Header + toggle */}
+      <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: open ? 'space-between' : 'center', padding: open ? '6px 8px' : '6px 0', borderBottom: '1px solid var(--grey-100)' }}>
+        {open && <span style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--grey-400)' }}>Company info</span>}
         <button
           onClick={onToggle}
           title={open ? 'Collapse drawer' : 'Expand drawer'}
