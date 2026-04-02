@@ -5,6 +5,7 @@ import V6 from '../variations/v6/Version'
 import V8 from '../variations/v8/Version'
 import V9 from '../variations/v9/Version'
 import V10 from '../variations/v10/Version'
+import V11 from '../variations/v11/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
 import DesignDoc from './pages/DesignDoc'
 import V1View from './pages/V1View'
@@ -155,6 +156,11 @@ export default function App() {
               <div style={s.columnLabel}>V10 — BO-IA-V1 sitemap · V9 nav scheme · V8 collapsible data drawer</div>
               <V10 />
             </div>
+
+            <div style={s.column}>
+              <div style={s.columnLabel}>V11 — V10 base · Company panel as horizontal top bar</div>
+              <V11 />
+            </div>
           </div>
         </div>
       )}
@@ -186,7 +192,7 @@ export default function App() {
       {/* Testing */}
       {view === 'testing' && (
         <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
-          <V10 />
+          <V11 />
         </div>
       )}
 
