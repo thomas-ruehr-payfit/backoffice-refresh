@@ -92,7 +92,7 @@ const s = {
 }
 
 export default function App() {
-  const [view, setView] = useState('v1')
+  const [view, setView] = useState('testing')
 
   return (
     <div style={s.app}>
