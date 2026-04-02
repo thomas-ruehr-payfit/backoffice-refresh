@@ -351,12 +351,9 @@ export default function Version({ activePage }) {
             <PanelRow label="Origin" value="Migration" faded />
           </div>
 
-          {/* Col 2: Rates + Banking */}
+          {/* Col 2: Banking */}
           <div style={s.panelCol}>
-            <div style={s.panelHead}>Rates</div>
-            <PanelRow label="Taux AT" value="0.700%" />
-            <PanelRow label="Taux VT" value="3%" />
-            <div style={s.panelSubHead}>Banking</div>
+            <div style={s.panelHead}>Banking</div>
             <PanelRow label="BIC" encrypted />
             <PanelRow label="IBAN" encrypted />
           </div>
@@ -369,21 +366,24 @@ export default function Version({ activePage }) {
             <PanelRow label="Method" value="SEPA direct debit" />
             <PanelRow label="Limit date" value="15th of month" />
             <PanelRow label="Periodicity" value="Monthly" />
+            <PanelRow label="Taux AT" value="0.700%" />
+            <PanelRow label="Taux VT" value="3%" />
             <div style={s.panelSubHead}>Agirc-Arrco</div>
+            <PanelRow label="Gestionnaire" value="Humanis" />
             <PanelRow label="Method" value="SEPA direct debit" />
-            <PanelRow label="Periodicity" value="Monthly" />
+            <PanelRow label="Periodicity" value="Quarterly" />
           </div>
 
-          {/* Col 4: Prévoyance + Mutuelle + Retraite */}
+          {/* Col 4: Prévoyance + Mutuelle */}
           <div style={s.panelCol}>
             <div style={s.panelHead}>Prévoyance</div>
-            <PanelRow label="Provider" value="Alan" />
-            <PanelRow label="Method" value="SEPA direct debit" />
+            <PanelRow label="Provider"    value="Alan" />
+            <PanelRow label="Method"      value="SEPA direct debit" />
+            <PanelRow label="Periodicity" value="Monthly" />
             <div style={s.panelSubHead}>Mutuelle</div>
-            <PanelRow label="Provider" value="Alan" />
-            <PanelRow label="Method" value="SEPA direct debit" />
-            <div style={s.panelSubHead}>Retraite</div>
-            <PanelRow label="Provider" value="Klésia" />
+            <PanelRow label="Provider"    value="Alan" />
+            <PanelRow label="Method"      value="SEPA direct debit" />
+            <PanelRow label="Periodicity" value="Monthly" />
           </div>
         </div>
       )}

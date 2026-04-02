@@ -37,7 +37,11 @@
       "Skill(update-config)",
       "mcp__figma__generate_diagram",
       "Bash(for v:*)",
-      "Bash(do echo:*)"
+      "Bash(do echo:*)",
+      "Bash(find /Users/thomasruehr/Documents/Projects/BackOffice - IA/variations/$v -type f)",
+      "Bash(find /Users/thomasruehr/Documents/Projects/BackOffice - IA/variations -type f -name *.ts -o -name *.tsx -o -name *.js -o -name *.jsx)",
+      "Bash(for dir:*)",
+      "Read(//Users/thomasruehr/Documents/Projects/BackOffice - IA/**)"
     ]
   }
 }

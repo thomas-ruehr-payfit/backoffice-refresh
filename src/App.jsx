@@ -6,6 +6,7 @@ import V8 from '../variations/v8/Version'
 import V9 from '../variations/v9/Version'
 import V10 from '../variations/v10/Version'
 import V11 from '../variations/v11/Version'
+import V12 from '../variations/v12/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
 import DesignDoc from './pages/DesignDoc'
 import V1View from './pages/V1View'
@@ -70,11 +71,13 @@ const s = {
   },
   column: {
     width: '1440px',
+    height: '800px',
     flexShrink: 0,
     display: 'flex',
     flexDirection: 'column',
     background: 'var(--white)',
     border: '1px solid var(--grey-200)',
+    overflow: 'hidden',
   },
   columnLabel: {
     padding: '6px 12px',
@@ -161,6 +164,11 @@ export default function App() {
               <div style={s.columnLabel}>V11 — V10 base · Company panel as horizontal top bar</div>
               <V11 />
             </div>
+
+            <div style={s.column}>
+              <div style={s.columnLabel}>V12 — V11 base · Operations + Utilities merged into "Advanced Actions"</div>
+              <V12 />
+            </div>
           </div>
         </div>
       )}
@@ -192,7 +200,7 @@ export default function App() {
       {/* Testing */}
       {view === 'testing' && (
         <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
-          <V11 />
+          <V10 />
         </div>
       )}
 

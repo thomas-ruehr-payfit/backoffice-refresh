@@ -104,33 +104,27 @@ Fields pending product/ops clarification before final grouping.
 
 Structured as **organism entities** — each organism carries its own sub-fields and should be treated as an expandable entity, not a flat key/value pair.
 
-#### Rates
-
-
-| Field   | Value (example) | Criticality | Mutability | Primary use         | Actor         | Display        | Notes                                                            |
-| ------- | --------------- | ----------- | ---------- | ------------------- | ------------- | -------------- | ---------------------------------------------------------------- |
-| Taux AT | 0.700%          | Standard    | Rare       | Payroll calculation | Ops / Finance | Always visible | Error in this rate propagates to declarations                    |
-| Taux VT | 3%              | Standard    | Rare       | Payroll calculation | Ops / Finance | Always visible | Identical profile to Taux AT — these two naturally live together |
-
-
 #### Urssaf
 
 
-| Field                        | Value (example)   | Criticality | Mutability | Primary use                                | Actor | Display        | Notes                                                                                              |
-| ---------------------------- | ----------------- | ----------- | ---------- | ------------------------------------------ | ----- | -------------- | -------------------------------------------------------------------------------------------------- |
-| Urssaf — Status              | Enabled           | Critical    | Rare       | Operational monitoring                     | Ops   | Always visible | Primary signal for Urssaf relationship health. Should be visually dominant within the Urssaf block |
-| Urssaf — Payment method      | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops   | Always visible |                                                                                                    |
-| Urssaf — Payment limit date  | 15th of the month | Standard    | Rare       | Configuration reference                    | Ops   | Always visible |                                                                                                    |
-| Urssaf — Payment periodicity | Monthly           | Standard    | Rare       | Configuration reference                    | Ops   | Always visible |                                                                                                    |
+| Field                        | Value (example)   | Criticality | Mutability | Primary use                                | Actor         | Display        | Notes                                                                                              |
+| ---------------------------- | ----------------- | ----------- | ---------- | ------------------------------------------ | ------------- | -------------- | -------------------------------------------------------------------------------------------------- |
+| Urssaf — Status              | Enabled           | Critical    | Rare       | Operational monitoring                     | Ops           | Always visible | Primary signal for Urssaf relationship health. Should be visually dominant within the Urssaf block |
+| Urssaf — Payment method      | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops           | Always visible |                                                                                                    |
+| Urssaf — Payment limit date  | 15th of the month | Standard    | Rare       | Configuration reference                    | Ops           | Always visible |                                                                                                    |
+| Urssaf — Payment periodicity | Monthly           | Standard    | Rare       | Configuration reference                    | Ops           | Always visible |                                                                                                    |
+| Taux AT                      | 0.700%            | Standard    | Rare       | Payroll calculation                        | Ops / Finance | Always visible | Error in this rate propagates to declarations                                                      |
+| Taux VT                      | 3%                | Standard    | Rare       | Payroll calculation                        | Ops / Finance | Always visible | Identical profile to Taux AT — these two naturally live together                                   |
 
 
 #### Agirc-Arrco
 
 
-| Field                             | Value (example)   | Criticality | Mutability | Primary use                                | Actor | Display        | Notes                                                 |
-| --------------------------------- | ----------------- | ----------- | ---------- | ------------------------------------------ | ----- | -------------- | ----------------------------------------------------- |
-| Agirc-Arrco — Payment method      | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops   | Always visible |                                                       |
-| Agirc-Arrco — Payment periodicity | Monthly           | Standard    | Rare       | Configuration reference                    | Ops   | Always visible | ⚠ No Status field unlike Urssaf — intentional or gap? |
+| Field                             | Value (example)   | Criticality | Mutability | Primary use                                | Actor | Display        | Notes |
+| --------------------------------- | ----------------- | ----------- | ---------- | ------------------------------------------ | ----- | -------------- | ----- |
+| Agirc-Arrco — Gestionnaire        | Humanis           | Standard    | Rare       | Operational reference                      | Ops   | Always visible |       |
+| Agirc-Arrco — Payment method      | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops   | Always visible |       |
+| Agirc-Arrco — Payment periodicity | Quarterly         | Standard    | Rare       | Configuration reference                    | Ops   | Always visible |       |
 
 
 #### Prévoyance
@@ -138,8 +132,9 @@ Structured as **organism entities** — each organism carries its own sub-fields
 
 | Field                       | Value (example)   | Criticality | Mutability | Primary use                                | Actor | Display        | Notes                                                                                      |
 | --------------------------- | ----------------- | ----------- | ---------- | ------------------------------------------ | ----- | -------------- | ------------------------------------------------------------------------------------------ |
-| Prévoyance — Provider       | Alan              | Standard    | Rare       | Operational reference                      | Ops   | Always visible | Organism entity — provider name only for now                                               |
-| Prévoyance — Payment method | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops   | Always visible | ⚠ Only one payment field vs. 4 for Urssaf — other attributes may exist but not tracked yet |
+| Prévoyance — Provider             | Alan              | Standard    | Rare       | Operational reference                      | Ops   | Always visible |                                                                                            |
+| Prévoyance — Payment method       | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops   | Always visible |                                                                                            |
+| Prévoyance — Payment periodicity  | Monthly           | Standard    | Rare       | Configuration reference                    | Ops   | Always visible |                                                                                            |
 
 
 #### Mutuelle
@@ -147,16 +142,10 @@ Structured as **organism entities** — each organism carries its own sub-fields
 
 | Field                     | Value (example)   | Criticality | Mutability | Primary use                                | Actor | Display        | Notes                                        |
 | ------------------------- | ----------------- | ----------- | ---------- | ------------------------------------------ | ----- | -------------- | -------------------------------------------- |
-| Mutuelle — Provider       | Alan              | Standard    | Rare       | Operational reference                      | Ops   | Always visible | Organism entity — provider name only for now |
-| Mutuelle — Payment method | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops   | Always visible | ⚠ Same open question as Prévoyance           |
+| Mutuelle — Provider             | Alan              | Standard    | Rare       | Operational reference                      | Ops   | Always visible |  |
+| Mutuelle — Payment method       | SEPA direct debit | Standard    | Rare       | Configuration reference (payment modality) | Ops   | Always visible |  |
+| Mutuelle — Payment periodicity  | Monthly           | Standard    | Rare       | Configuration reference                    | Ops   | Always visible |  |
 
-
-#### Retraite
-
-
-| Field               | Value (example) | Criticality | Mutability | Primary use           | Actor | Display        | Notes                                        |
-| ------------------- | --------------- | ----------- | ---------- | --------------------- | ----- | -------------- | -------------------------------------------- |
-| Retraite — Provider | Klésia          | Standard    | Rare       | Operational reference | Ops   | Always visible | Organism entity — provider name only for now |
 
 
 ---
@@ -183,18 +172,16 @@ Banking source account. Distinct from payment modality (how we pay an organism) 
 | 2   | Suspension state                    | Confirm values and logic. Is the payment-default hypothesis correct? Is it a parallel dimension to Status or a sub-state? |
 | 3   | Status + Suspension state           | Clarify the relationship between the two fields. Can a company be Active + non-Operational simultaneously?                |
 | 4   | BIC / IBAN                          | Encryption behavior: role-gated reveal requiring explicit action, or just a visual mask? Who has access?                  |
-| 5   | Agirc-Arrco                         | Is the absence of a Status field intentional, or a tracking gap?                                                          |
-| 6   | Prévoyance / Mutuelle / Agirc-Arrco | Do limit date and periodicity fields exist for these organisms but aren't tracked yet?                                    |
-| 7   | Origin                              | What are all possible values?                                                                                             |
-| 8   | First month of service              | Confirm whether this belongs in Identity or should move to an Operations group                                            |
-| 9   | Immatriculation                     | Confirm whether this belongs in Identity or a future "Organism relationships" group                                       |
+| 5   | Origin                              | What are all possible values?                                                                                             |
+| 6   | First month of service              | Confirm whether this belongs in Identity or should move to an Operations group                                            |
+| 7   | Immatriculation                     | Confirm whether this belongs in Identity or a future "Organism relationships" group                                       |
 
 
 ---
 
 ## Structural insights
 
-- **Organism-as-entity pattern** — Urssaf, Agirc-Arrco, Prévoyance, Mutuelle, Retraite should each be modeled as expandable entities with their own sub-fields, not flat key/value pairs. This will allow independent iteration as each organism's data model grows.
+- **Organism-as-entity pattern** — Urssaf, Agirc-Arrco, Prévoyance, Mutuelle should each be modeled as expandable entities with their own sub-fields, not flat key/value pairs. This will allow independent iteration as each organism's data model grows.
 - **Payment modality vs. banking info** — Payment method (SEPA direct debit) is how we pay an organism. BIC/IBAN is the source account. These are conceptually distinct and should not live in the same group.
 - **Lifecycle-dependent criticality** — Origin is high-criticality at onboarding, fades to background over time. This pattern may apply to other fields and is worth considering as a display logic concept.
 - **Diagnostic reference as a display pattern** — SIRET, BIC, IBAN are not daily-use fields but must be immediately reachable when something breaks. This is distinct from "on demand" in that the trigger is an incident, not a deliberate exploration.

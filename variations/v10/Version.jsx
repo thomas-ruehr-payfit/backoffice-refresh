@@ -64,29 +64,27 @@ const METADATA_SECTIONS = [
     { label: 'Created',  value: '26/04/23' },
     { label: 'Address',  value: '10 rue de Paradis, 75010' },
   ]},
-  { title: 'Rates', rows: [
-    { label: 'Taux AT', value: '0.700%' },
-    { label: 'Taux VT', value: '3%' },
-  ]},
   { title: 'Urssaf', badge: 'Enabled', rows: [
     { label: 'Method',      value: 'SEPA direct debit' },
     { label: 'Limit date',  value: '15th of month' },
     { label: 'Periodicity', value: 'Monthly' },
+    { label: 'Taux AT',     value: '0.700%' },
+    { label: 'Taux VT',     value: '3%' },
   ]},
   { title: 'Agirc-Arrco', rows: [
+    { label: 'Gestionnaire', value: 'Humanis' },
+    { label: 'Method',       value: 'SEPA direct debit' },
+    { label: 'Periodicity',  value: 'Quarterly' },
+  ]},
+  { title: 'Prévoyance', rows: [
+    { label: 'Provider',    value: 'Alan' },
     { label: 'Method',      value: 'SEPA direct debit' },
     { label: 'Periodicity', value: 'Monthly' },
   ]},
-  { title: 'Prévoyance', rows: [
-    { label: 'Provider', value: 'Alan' },
-    { label: 'Method',   value: 'SEPA direct debit' },
-  ]},
   { title: 'Mutuelle', rows: [
-    { label: 'Provider', value: 'Alan' },
-    { label: 'Method',   value: 'SEPA direct debit' },
-  ]},
-  { title: 'Retraite', rows: [
-    { label: 'Provider', value: 'Klésia' },
+    { label: 'Provider',    value: 'Alan' },
+    { label: 'Method',      value: 'SEPA direct debit' },
+    { label: 'Periodicity', value: 'Monthly' },
   ]},
   { title: 'Banking', rows: [
     { label: 'BIC',  encrypted: true },
@@ -224,7 +222,7 @@ function LeftPanel({ currentCompany, onCompanyChange, currentPage, onPageChange 
             border: `1px solid ${accent ? 'var(--accent)' : dim ? 'transparent' : 'var(--grey-200)'}`,
             padding: '1px 6px',
           }}>
-            {value}
+            {label}: {value}
           </span>
         ))}
       </div>

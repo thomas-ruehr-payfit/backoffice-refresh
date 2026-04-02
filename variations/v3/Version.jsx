@@ -452,34 +452,30 @@ function CompanyPanel() {
         <PanelRow label="Address"  value="10 rue de Paradis, 75010" />
       </PanelSection>
 
-      <PanelSection title="Rates">
-        <PanelRow label="Taux AT" value="0.700%" />
-        <PanelRow label="Taux VT" value="3%" />
-      </PanelSection>
-
       <PanelSection title="Urssaf" badge="Enabled">
         <PanelRow label="Method"      value="SEPA direct debit" />
         <PanelRow label="Limit date"  value="15th of month" />
         <PanelRow label="Periodicity" value="Monthly" />
+        <PanelRow label="Taux AT"     value="0.700%" />
+        <PanelRow label="Taux VT"     value="3%" />
       </PanelSection>
 
       <PanelSection title="Agirc-Arrco">
+        <PanelRow label="Gestionnaire" value="Humanis" />
+        <PanelRow label="Method"       value="SEPA direct debit" />
+        <PanelRow label="Periodicity"  value="Quarterly" />
+      </PanelSection>
+
+      <PanelSection title="Prévoyance">
+        <PanelRow label="Provider"    value="Alan" />
         <PanelRow label="Method"      value="SEPA direct debit" />
         <PanelRow label="Periodicity" value="Monthly" />
       </PanelSection>
 
-      <PanelSection title="Prévoyance">
-        <PanelRow label="Provider" value="Alan" />
-        <PanelRow label="Method"   value="SEPA direct debit" />
-      </PanelSection>
-
       <PanelSection title="Mutuelle">
-        <PanelRow label="Provider" value="Alan" />
-        <PanelRow label="Method"   value="SEPA direct debit" />
-      </PanelSection>
-
-      <PanelSection title="Retraite">
-        <PanelRow label="Provider" value="Klésia" />
+        <PanelRow label="Provider"    value="Alan" />
+        <PanelRow label="Method"      value="SEPA direct debit" />
+        <PanelRow label="Periodicity" value="Monthly" />
       </PanelSection>
 
       <PanelSection title="Banking">

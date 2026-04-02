@@ -1,4 +1,4 @@
-// V11 — V10 base · GlobalNav unchanged · LeftPanel replaced by horizontal CompanyTopBar
+// V12 — V11 base · Operations + Utilities merged into "Advanced Actions" with sub-tabs
 
 import { useState } from 'react'
 import Dashboard from '../../modules/dashboard/Dashboard'
@@ -26,12 +26,11 @@ const COMPANIES = [
 ]
 
 const NAV_ITEMS = [
-  { id: 'people',      label: 'People',      primary: true  },
-  { id: 'declaration', label: 'Declaration', primary: true  },
-  { id: 'files',       label: 'Files',       primary: true  },
-  { id: 'timeline',    label: 'Timeline',    primary: false },
-  { id: 'operations',  label: 'Operations',  primary: false },
-  { id: 'utilities',   label: 'Utilities',   primary: false },
+  { id: 'people',           label: 'People',           primary: true  },
+  { id: 'declaration',      label: 'Declaration',      primary: true  },
+  { id: 'files',            label: 'Files',            primary: true  },
+  { id: 'timeline',         label: 'Timeline',         primary: false },
+  { id: 'advanced-actions', label: 'Advanced Actions', primary: false },
 ]
 
 const SUB_ITEMS = {
@@ -40,9 +39,10 @@ const SUB_ITEMS = {
     { id: 'dsn',       label: 'DSN' },
     { id: 'settings',  label: 'Declaration settings' },
   ],
-  utilities: [
-    { id: 'migration', label: 'Environment migration' },
-    { id: 'import',    label: 'Bulk import' },
+  'advanced-actions': [
+    { id: 'operations', label: 'Operations' },
+    { id: 'migration',  label: 'Environment Migration' },
+    { id: 'import',     label: 'Bulk Import' },
   ],
 }
 
@@ -385,7 +385,7 @@ const CONTENT_MAP = {
 }
 
 function ContentArea({ page, sub }) {
-  if (page === 'operations') {
+  if (page === 'advanced-actions' && sub === 'operations') {
     return (
       <div style={pw}>
         <Onboarding />
@@ -412,8 +412,8 @@ function ContentArea({ page, sub }) {
 // ── Version shell ─────────────────────────────────────────────────────────────
 
 const DEFAULT_SUBS = {
-  declaration: 'dashboard',
-  utilities:   'migration',
+  declaration:       'dashboard',
+  'advanced-actions': 'operations',
 }
 
 export default function Version() {
