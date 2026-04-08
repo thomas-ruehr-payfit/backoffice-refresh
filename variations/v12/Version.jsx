@@ -258,7 +258,7 @@ function FirstLevelNav({ currentPage, onPageChange }) {
         const isActive = currentPage === item.id
         return (
           <button key={item.id} onClick={() => onPageChange(item.id)} style={{
-            padding: '0 18px', height: 40,
+            padding: '0 18px', height: 48,
             fontSize: 'var(--text-sm)', fontWeight: isActive ? 600 : 400,
             color: isActive ? 'var(--black)' : 'var(--grey-500)',
             background: 'none', border: 'none',
@@ -276,7 +276,7 @@ function FirstLevelNav({ currentPage, onPageChange }) {
         const isActive = currentPage === item.id
         return (
           <button key={item.id} onClick={() => onPageChange(item.id)} style={{
-            padding: '0 18px', height: 40,
+            padding: '0 18px', height: 48,
             fontSize: 'var(--text-sm)', fontWeight: isActive ? 600 : 400,
             color: isActive ? 'var(--black)' : 'var(--grey-500)',
             background: 'none', border: 'none',
@@ -356,7 +356,7 @@ function SubTabBar({ items, current, onChange }) {
       {items.map(item => (
         <button key={item.id}
           style={{
-            padding: '5px 14px', fontSize: 'var(--text-xs)',
+            padding: '8px 16px', fontSize: 'var(--text-sm)',
             fontWeight: current === item.id ? 600 : 400,
             color: current === item.id ? 'var(--black)' : 'var(--grey-500)',
             cursor: 'pointer', background: 'none', border: 'none',

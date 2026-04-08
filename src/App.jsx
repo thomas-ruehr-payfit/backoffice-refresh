@@ -200,7 +200,7 @@ export default function App() {
       {/* Testing */}
       {view === 'testing' && (
         <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
-          <V10 />
+          <V12 />
         </div>
       )}
 
