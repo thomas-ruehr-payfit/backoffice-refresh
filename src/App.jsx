@@ -7,6 +7,8 @@ import V9 from '../variations/v9/Version'
 import V10 from '../variations/v10/Version'
 import V11 from '../variations/v11/Version'
 import V12 from '../variations/v12/Version'
+import V13 from '../variations/v13/Version'
+import V14 from '../variations/v14/Version'
 import InformationArchitecture from './pages/InformationArchitecture'
 import DesignDoc from './pages/DesignDoc'
 import V1View from './pages/V1View'
@@ -169,6 +171,16 @@ export default function App() {
               <div style={s.columnLabel}>V12 — V11 base · Operations + Utilities merged into "Advanced Actions"</div>
               <V12 />
             </div>
+
+            <div style={s.column}>
+              <div style={s.columnLabel}>V13 — V12 base · Persistent left column · Top nav above content only</div>
+              <V13 />
+            </div>
+
+            <div style={s.column}>
+              <div style={s.columnLabel}>V14 — V12 base · Primary nav in top header · Operational data above company info in drawer</div>
+              <V14 />
+            </div>
           </div>
         </div>
       )}
@@ -200,7 +212,7 @@ export default function App() {
       {/* Testing */}
       {view === 'testing' && (
         <div style={{ flex: 1, overflow: 'hidden', display: 'flex' }}>
-          <V12 />
+          <V14 />
         </div>
       )}
 
