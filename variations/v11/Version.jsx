@@ -26,12 +26,11 @@ const COMPANIES = [
 ]
 
 const NAV_ITEMS = [
-  { id: 'people',      label: 'People',      primary: true  },
-  { id: 'declaration', label: 'Declaration', primary: true  },
-  { id: 'files',       label: 'Files',       primary: true  },
-  { id: 'timeline',    label: 'Timeline',    primary: false },
-  { id: 'operations',  label: 'Operations',  primary: false },
-  { id: 'utilities',   label: 'Utilities',   primary: false },
+  { id: 'people',           label: 'People',           primary: true  },
+  { id: 'declaration',      label: 'Declaration',      primary: true  },
+  { id: 'files',            label: 'Files',            primary: true  },
+  { id: 'timeline',         label: 'Timeline',         primary: false },
+  { id: 'advanced-actions', label: 'Advanced Actions', primary: false },
 ]
 
 const SUB_ITEMS = {
@@ -40,19 +39,22 @@ const SUB_ITEMS = {
     { id: 'dsn',       label: 'DSN' },
     { id: 'settings',  label: 'Declaration settings' },
   ],
-  utilities: [
-    { id: 'migration', label: 'Environment migration' },
-    { id: 'import',    label: 'Bulk import' },
+  'advanced-actions': [
+    { id: 'operations', label: 'Operations' },
+    { id: 'migration',  label: 'Environment Migration' },
+    { id: 'import',     label: 'Bulk Import' },
   ],
 }
 
 const STATUS_CHIPS = [
-  { label: 'Cycle',     value: 'Mar 26 (125)', accent: true,  dim: false },
-  { label: 'Status',    value: 'Active',       accent: true,  dim: false },
-  { label: 'Plan',      value: 'RH+',          accent: false, dim: false },
-  { label: 'Employees', value: '7',            accent: false, dim: false },
-  { label: 'Usage',     value: 'Client',       accent: false, dim: true  },
-  { label: 'Origin',    value: 'Migration',    accent: false, dim: true  },
+  { label: 'Cycle',     value: 'Mar 26 (125)',  accent: true,  dim: false },
+  { label: 'Status',    value: 'Active',         accent: true,  dim: false },
+  { label: 'Plan',      value: 'RH+',            accent: false, dim: false },
+  { label: 'Employees', value: '7',              accent: false, dim: false },
+  { label: 'Usage',     value: 'Client',         accent: false, dim: true  },
+  { label: 'Origin',    value: 'Migration',      accent: false, dim: true  },
+  { label: 'CL ID',     value: 'af35b7de-4f1c…', fullValue: 'af35b7de-4f1c-51ef-bc88-1282797490bd', accent: false, dim: false, mono: true },
+  { label: 'JL ID',     value: '56c72b558d…',    fullValue: '56c72b558dc34f0100ba8707',              accent: false, dim: false, mono: true },
 ]
 
 const METADATA_SECTIONS = [
@@ -174,7 +176,6 @@ function GlobalNav() {
 
 function CompanyTopBar({ currentCompany, onCompanyChange }) {
   const [switcherOpen, setSwitcherOpen] = useState(false)
-  const company = COMPANIES.find(c => c.name === currentCompany) || COMPANIES[0]
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--grey-200)', background: 'var(--white)', flexShrink: 0, position: 'relative', minHeight: 56 }}>
@@ -193,15 +194,9 @@ function CompanyTopBar({ currentCompany, onCompanyChange }) {
         </button>
 
         {/* Company name */}
-        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--black)', whiteSpace: 'nowrap', lineHeight: 1 }}>
+        <span style={{ fontSize: 17, fontWeight: 700, color: 'var(--black)', whiteSpace: 'nowrap', lineHeight: 1 }}>
           {currentCompany}
         </span>
-
-        {/* Country + SIRET */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--grey-600)', background: 'var(--grey-100)', padding: '1px 5px', letterSpacing: '0.04em' }}>{COUNTRY}</span>
-          <SiretDisplay siret={company.siret} />
-        </div>
 
         {switcherOpen && (
           <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 300, background: 'var(--white)', border: '1px solid var(--grey-200)', minWidth: 200, marginTop: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}>
@@ -219,20 +214,17 @@ function CompanyTopBar({ currentCompany, onCompanyChange }) {
         )}
       </div>
 
-      {/* Status chips */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '0 14px', flexWrap: 'nowrap' }}>
-        {STATUS_CHIPS.map(({ label, value, accent, dim }) => (
-          <span key={label} style={{
-            fontSize: 'var(--text-xs)', fontWeight: accent ? 700 : 500,
-            color: accent ? 'var(--accent)' : dim ? 'var(--grey-300)' : 'var(--grey-700)',
-            background: accent ? '#EBF0FF' : dim ? 'transparent' : 'var(--grey-100)',
-            border: `1px solid ${accent ? 'var(--accent)' : dim ? 'transparent' : 'var(--grey-200)'}`,
-            padding: '1px 6px',
-            whiteSpace: 'nowrap',
-          }}>
-            {label}: {value}
-          </span>
-        ))}
+      {/* Status columns */}
+      <div style={{ display: 'flex', alignItems: 'stretch', padding: '0 8px', flexWrap: 'nowrap', borderLeft: '1px solid var(--grey-200)' }}>
+        {STATUS_CHIPS.map(({ label, value, fullValue, accent, dim, mono }, i) => {
+          const addDivider = i === 3 || i === 5
+          return (
+            <div key={label} style={{ display: 'flex', alignItems: 'stretch' }}>
+              {addDivider && <div style={{ width: 1, background: 'var(--grey-200)', margin: '8px 4px' }} />}
+              <TopBarChip label={label} value={value} fullValue={fullValue} accent={accent} dim={dim} mono={mono} />
+            </div>
+          )
+        })}
       </div>
 
       {/* Connect — pinned right */}
@@ -291,16 +283,73 @@ function FirstLevelNav({ currentPage, onPageChange }) {
   )
 }
 
+// ── Copy interaction ──────────────────────────────────────────────────────────
+
+function useCopyable(fullValue) {
+  const [hovered, setHovered] = useState(false)
+  const [copied,  setCopied]  = useState(false)
+  function handleClick() {
+    if (!fullValue) return
+    navigator.clipboard.writeText(fullValue)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 900)
+  }
+  return { hovered, setHovered, copied, handleClick }
+}
+
+function CopiedTooltip() {
+  return (
+    <div style={{ position: 'absolute', bottom: 'calc(100% + 4px)', left: '50%', transform: 'translateX(-50%)', background: 'var(--grey-800)', color: 'var(--white)', fontSize: 9, padding: '2px 6px', borderRadius: 3, whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 10 }}>
+      Copied
+    </div>
+  )
+}
+
+function TopBarChip({ label, value, fullValue, accent, dim, mono }) {
+  const { hovered, setHovered, copied, handleClick } = useCopyable(fullValue || value)
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={handleClick}
+      style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 2, padding: '4px 10px', cursor: 'pointer', background: hovered ? 'var(--grey-50)' : 'transparent', borderRadius: 3 }}
+    >
+      {copied && <CopiedTooltip />}
+      <span style={{ fontSize: 9, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--grey-400)', whiteSpace: 'nowrap' }}>
+        {label}
+      </span>
+      <span style={{
+        fontSize: 11, fontWeight: accent ? 700 : 500,
+        fontFamily: mono ? 'var(--font-mono)' : 'inherit',
+        color: accent ? 'var(--accent)' : dim ? 'var(--grey-300)' : 'var(--grey-800)',
+        whiteSpace: 'nowrap',
+      }}>
+        {value}
+      </span>
+    </div>
+  )
+}
+
 // ── Collapsible data drawer ───────────────────────────────────────────────────
 
 function MetaRow({ label, value, faded, encrypted }) {
+  const fullValue = encrypted ? null : value
+  const { hovered, setHovered, copied, handleClick } = useCopyable(fullValue)
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '3px 12px', borderBottom: '1px solid var(--grey-100)', gap: 8 }}>
       <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-600)', whiteSpace: 'nowrap', flexShrink: 0 }}>{label}</span>
-      {encrypted
-        ? <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', fontFamily: 'var(--font-mono)' }}>[Encrypted]</span>
-        : <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500, color: faded ? 'var(--grey-400)' : 'var(--black)', textAlign: 'right' }}>{value}</span>
-      }
+      <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onClick={handleClick}
+        style={{ position: 'relative', display: 'inline-flex', cursor: encrypted ? 'default' : 'pointer' }}
+      >
+        {copied && <CopiedTooltip />}
+        {encrypted
+          ? <span style={{ fontSize: 'var(--text-xs)', color: 'var(--grey-400)', fontFamily: 'var(--font-mono)', padding: '1px 4px' }}>[Encrypted]</span>
+          : <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500, color: faded ? 'var(--grey-400)' : 'var(--black)', textAlign: 'right', background: hovered ? 'var(--grey-100)' : 'transparent', padding: '1px 4px', borderRadius: 2 }}>{value}</span>
+        }
+      </div>
     </div>
   )
 }
@@ -385,7 +434,7 @@ const CONTENT_MAP = {
 }
 
 function ContentArea({ page, sub }) {
-  if (page === 'operations') {
+  if (page === 'advanced-actions' && sub === 'operations') {
     return (
       <div style={pw}>
         <Onboarding />
@@ -412,8 +461,8 @@ function ContentArea({ page, sub }) {
 // ── Version shell ─────────────────────────────────────────────────────────────
 
 const DEFAULT_SUBS = {
-  declaration: 'dashboard',
-  utilities:   'migration',
+  declaration:        'dashboard',
+  'advanced-actions': 'operations',
 }
 
 export default function Version() {
